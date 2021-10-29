@@ -31,23 +31,20 @@ options(scientific=T, digits = 3)
 
 **importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
 
-```{r q01}
+```{r step1}
 Adata <- data.frame(read.csv("acs2015_county_data.csv",header = TRUE))
 
 str(Adata)
 
 summary(Adata)
 
-#levels(Adata$Men)
-
-#Adata$admit <- factor(Adata$Men)
-
-#levels(Adata$Men)
+# I don't think we need to change any variables type, all of them set properly, double check.
+# There are a lot of variables , we may drop some of them, like :
+#Hispanic, White,	Black,	Native,	Asian	Pacific, IncomeErr,	IncomePerCap,	IncomePerCapErr
 
 
-#str(Adata)
+# If you agree please write the code here and drop them. 
 
-#Adata 
   
 
 ```
@@ -56,7 +53,15 @@ summary(Adata)
 
 ***Cleaning the data. removing the outliers and the NA from the income. Saving the resulting dataframe as Adata2. **
 
-```{r}
+```{r step2}
+
+# After reading the data we need now to clean it to prepare for the analysis. 
+# I started with my column "income", first I polte it to identify the outlier and then removing it. 
+# Also , I removed the null values because it make error while do mathematics calculation. 
+# You can follow the same steps for your columns , or use your own way. 
+
+################################################################################
+
 
 # First, lets take a look at the histogram for the income to detect the outliers 
 
@@ -67,8 +72,6 @@ hist(Adata$Income,
   main = "Histogram of Income",
   breaks = sqrt(nrow(Adata))
 ) # set number of bins
-
-
 
 
 
@@ -130,6 +133,8 @@ max(Adata3$Income)
 ```
 
 ```{r}
+
+# Ignore this chunk, I just was trying to use leaflet to create maps. 
 
 # install.packages("httpuv")
 # 
