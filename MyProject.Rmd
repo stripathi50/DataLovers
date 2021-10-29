@@ -1,0 +1,213 @@
+---
+title: "Project"
+author: "Thana Alzaid"
+date: "10 oct 2021"
+# date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r init, include=FALSE}
+# some of common options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+library(ezids)
+# knitr::opts_chunk$set(warning = F, results = "markup", message = F)
+knitr::opts_chunk$set(warning = F, results = "hide", message = F)
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+# ‘scipen’: integer. A penalty to be applied when deciding to print numeric values in fixed or exponential notation.  Positive values bias towards fixed and negative towards scientific notation: fixed notation will be preferred unless it is more than ‘scipen’ digits wider.
+# use scipen=999 to prevent scientific notation at all times
+```
+
+
+
+**importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
+
+```{r q01}
+Adata <- data.frame(read.csv("acs2015_county_data.csv",header = TRUE))
+
+str(Adata)
+
+summary(Adata)
+
+#levels(Adata$Men)
+
+#Adata$admit <- factor(Adata$Men)
+
+#levels(Adata$Men)
+
+
+#str(Adata)
+
+#Adata 
+  
+
+```
+
+
+
+***Cleaning the data. removing the outliers and the NA from the income. Saving the resulting dataframe as Adata2. **
+
+```{r}
+
+# First, lets take a look at the histogram for the income to detect the outliers 
+
+
+
+hist(Adata$Income,
+  xlab = "Income",
+  main = "Histogram of Income",
+  breaks = sqrt(nrow(Adata))
+) # set number of bins
+
+
+
+
+
+# # Now, we can extract the outliers from the incom using boxplot.stats()$out function.  
+ income_out <- boxplot.stats(Adata$Income)$out
+ income_out
+
+
+# To count how many outliers in the income
+ x <- data.frame(income_out)
+x 
+ nrow(x) # outliers numbers for income
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata2
+ Adata2<- Adata[-which(Adata$Income %in% income_out),] # here we removed income outlier
+ Adata2
+ 
+
+ hist(Adata2$Income,
+  xlab = "Income",
+  main = "Histogram of Income",
+  breaks = sqrt(nrow(Adata2))
+) # set number of bins
+
+ 
+# #Adata
+# Adata2 
+
+
+ # Now we will remove the naull values from the incmoe to allow for math calculations. 
+ 
+ my.null <- data.frame (subset(Adata2,subset= is.na(Adata2$Income)))# To indicate the null values of income. 
+my.null
+
+
+Adata3 <- data.frame (subset(Adata2, subset= CensusId!= 48301 )) # To remove the record that contains null value
+
+# Now we can calculate the max of the income
+max(Adata3$Income)
+ 
+ 
+
+```
+
+
+
+
+
+**Like  **
+
+```{r}
+
+
+
+
+
+
+```
+
+```{r}
+
+# install.packages("httpuv")
+# 
+# library(leaflet)
+# 
+# 
+# water_locations_map <- leaflet(Adata3$Income) %>%
+#   addTiles() %>%
+#   addCircleMarkers(lng = ~location.longitude,
+#                    lat = ~location.latitude)
+
+
+# m <- leaflet() %>%
+#   addTiles() %>%  # Add default OpenStreetMap map tiles
+#   addMarkers(lng=174.768, lat=-36.852, popup="Adata3$Income")
+# m  # Print the map
+
+
+```
+
+
+### Q
+
+**. **
+
+
+```{r}
+
+
+ 
+```
+
+
+### Q
+
+**? **
+
+```{r, results='hold'}
+
+
+```
+
+
+
+### Q
+
+**W **
+
+```{r, results='hold'}
+
+
+```
+
+
+
+### Question 7
+
+**f **
+
+```{r Q7, results='hold'}
+
+
+
+```
+
+
+
+### Q
+
+**.**
+
+```{r Q8, results='hold'}
+
+
+
+```
+
+
+
+
+
