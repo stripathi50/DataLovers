@@ -1,6 +1,6 @@
 ---
 title: "Project"
-author: "Thana Alzaid"
+author: "Data lovers"
 date: "10 oct 2021"
 # date: "`r Sys.Date()`"
 output:
@@ -32,19 +32,23 @@ options(scientific=T, digits = 3)
 **importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
 
 ```{r step1}
-Adata <- data.frame(read.csv("acs2015_county_data.csv",header = TRUE))
+Adata1 <- data.frame(read.csv("acs2015_county_data.csv",header = TRUE))
 
-str(Adata)
+str(Adata1)
 
-summary(Adata)
+#summary(Adata1)
 
-# I don't think we need to change any variables type, all of them set properly, double check.
+#  we don't need to change any variables type, all of them set properly.
 # There are a lot of variables , we may drop some of them, like :
 #Hispanic, White,	Black,	Native,	Asian	Pacific, IncomeErr,	IncomePerCap,	IncomePerCapErr
 
 
-# If you agree please write the code here and drop them. 
+# Dropping columns as agreed.  
 
+Adata <- data.frame (subset(Adata1, select = -c(Hispanic,White,Black, Native, Asian, Pacific,IncomeErr, IncomePerCap, IncomePerCapErr, Drive, Carpool, Transit, Walk, OtherTransp, MeanCommute)))
+
+str(Adata)
+summary(Adata)
   
 
 ```
@@ -56,9 +60,9 @@ summary(Adata)
 ```{r step2}
 
 # After reading the data we need now to clean it to prepare for the analysis. 
-# I started with my column "income", first I polte it to identify the outlier and then removing it. 
-# Also , I removed the null values because it make error while do mathematics calculation. 
-# You can follow the same steps for your columns , or use your own way. 
+# We started with "income", first we polte it to identify the outlier and then removing it. 
+# Also , we removed the null values because it make error while do mathematics calculation. 
+# Then we follow the same steps for the remaining columns that we will gonna use in this phase. 
 
 ################################################################################
 
@@ -75,6 +79,7 @@ hist(Adata$Income,
 
 
 
+
 # # Now, we can extract the outliers from the incom using boxplot.stats()$out function.  
  income_out <- boxplot.stats(Adata$Income)$out
  income_out
@@ -87,10 +92,12 @@ x
 
 
  #Now, we will remove the outliers from our dataset and store the clean result in Adata2
- Adata2<- Adata[-which(Adata$Income %in% income_out),] # here we removed income outlier
+
+  Adata2<- Adata[-which(Adata$Income %in% income_out),] # here we removed income outlier
+
+
  Adata2
  
-
  hist(Adata2$Income,
   xlab = "Income",
   main = "Histogram of Income",
@@ -110,10 +117,331 @@ my.null
 
 Adata3 <- data.frame (subset(Adata2, subset= CensusId!= 48301 )) # To remove the record that contains null value
 
-# Now we can calculate the max of the income
+# Now we can calculate the max, mean , min .. etc of the income
 max(Adata3$Income)
+mean(Adata3$Income)
+min(Adata3$Income)
+
+
+
+```
+
+
+
+
+**Cleaning the data for population column. **
+
+```{r}
+
+# same thing for population column. clean the data. 
+
+# First, lets take a look at the histogram for the population to detect the outliers 
+
+
+
+hist(Adata3$TotalPop,
+  xlab = "TotalPop",
+  main = "Histogram of Population",
+  breaks = sqrt(nrow(Adata3))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers from the population using boxplot.stats()$out function.  
+ pop_out <- boxplot.stats(Adata3$TotalPop)$out
+ pop_out
+
+
+# To count how many outliers in the population
+ x2 <- data.frame(pop_out)
+x2 
+ nrow(x2) # outliers numbers 
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata4
+
+  Adata4<- Adata3[-which(Adata3$TotalPop %in% pop_out),] # here we removed  outlier
+
+
+ Adata4
+ 
+ hist(Adata4$TotalPop,
+  xlab = "TotalPop",
+  main = "Histogram of Population",
+  breaks = sqrt(nrow(Adata4))
+) # set number of bins
+
+ 
+# #Adata
+# Adata2 
+
+
+ # Now we will remove the naull values from the population to allow for math calculations. 
+ 
+ my.null2 <- data.frame (subset(Adata4,subset= is.na(Adata4$TotalPop)))# To indicate the null values of Population 
+my.null2  # No null values. 
+
+
+# Now we can calculate the max and the mean .. etc of the population. 
+max(Adata4$TotalPop)
+mean(Adata4$TotalPop)
+min(Adata4$TotalPop)
+
+
+
+```
+
+
+
+**Cleaning the data for Poverty column. **
+```{r}
+
+
+# same thing for poverty column. clean the data. 
+
+# First, lets take a look at the histogram for the poverty to detect the outliers 
+
+
+
+hist(Adata4$Poverty,
+  xlab = "Poverty",
+  main = "Histogram of Poverty",
+  breaks = sqrt(nrow(Adata4))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers from the population using boxplot.stats()$out function.  
+ Poverty_out <- boxplot.stats(Adata4$Poverty)$out
+ Poverty_out
+
+
+# To count how many outliers in the population
+ x3 <- data.frame(Poverty_out)
+x3 
+ nrow(x3) # outliers numbers 
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata5
+
+  Adata5<- Adata4[-which(Adata4$Poverty %in% Poverty_out),] # here we removed  outlier
+
+
+ Adata5
+ 
+ hist(Adata5$Poverty,
+  xlab = "Poverty",
+  main = "Histogram of Poverty",
+  breaks = sqrt(nrow(Adata5))
+) # set number of bins
+
  
  
+
+
+
+ # No null values. 
+ 
+
+# Now we can calculate the max and the mean .. etc of the population. 
+max(Adata4$Poverty)
+mean(Adata4$Poverty)
+min (Adata4$Poverty)
+
+
+
+
+
+
+```
+
+
+**Cleaning the data for Child Poverty column. **
+
+```{r}
+
+
+# same thing for Child Poverty column. clean the data. 
+
+# First, lets take a look at the histogram for the Child Poverty to detect the outliers 
+
+
+
+hist(Adata5$ChildPoverty,
+  xlab = "ChildPoverty",
+  main = "Histogram of ChildPoverty",
+  breaks = sqrt(nrow(Adata5))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers using boxplot.stats()$out function.  
+ ChildPoverty_out <- boxplot.stats(Adata5$ChildPoverty)$out
+ ChildPoverty_out
+
+
+# To count how many outliers in the population
+ x4 <- data.frame(ChildPoverty_out)
+x4
+ nrow(x4) # outliers numbers 
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata6
+
+  Adata6<- Adata5[-which(Adata5$ChildPoverty %in% ChildPoverty_out),] # here we removed  outlier
+
+
+ Adata6
+ 
+ hist(Adata6$ChildPoverty,
+  xlab = "ChildPoverty",
+  main = "Histogram of Child Poverty",
+  breaks = sqrt(nrow(Adata6))
+) # set number of bins
+
+ 
+ 
+
+ 
+ my.null3 <- data.frame (subset(Adata6,subset= is.na(Adata6$ChildPoverty)))# To indicate the null values
+my.null3  
+ 
+
+ Adata7 <- data.frame (subset(Adata6, subset= CensusId!= 15005 )) # To remove the record that contains null value
+
+
+
+# Now we can calculate the max and the mean .. etc of the population. 
+max(Adata7$ChildPoverty)
+mean(Adata7$ChildPoverty)
+min (Adata7$ChildPoverty)
+
+
+
+
+
+
+```
+
+
+**Cleaning the data for Employed column  ** 
+
+```{r}
+
+# same thing for Employed column. clean the data. 
+
+# First, lets take a look at the histogram for the Employed to detect the outliers 
+
+
+
+hist(Adata7$Employed,
+  xlab = "Employed",
+  main = "Histogram of Employed",
+  breaks = sqrt(nrow(Adata7))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers using boxplot.stats()$out function.  
+ Employed_out <- boxplot.stats(Adata7$Employed)$out
+ Employed_out
+
+
+# To count how many outliers in the population
+ x5 <- data.frame(Employed_out)
+x5
+ nrow(x5) # outliers numbers 
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata8
+
+  Adata8<- Adata7[-which(Adata7$Employed %in% Employed_out),] # here we removed outlier
+
+
+ Adata8
+ 
+ hist(Adata8$Employed,
+  xlab = "Employed",
+  main = "Histogram of Employed",
+  breaks = sqrt(nrow(Adata8))
+) # set number of bins
+
+ 
+ 
+# No null values. 
+ 
+
+# # Now we can calculate the max and the mean .. etc of the population. 
+max(Adata8$Employed)
+mean(Adata8$Employed)
+min (Adata8$Employed)
+
+
+
+```
+
+
+**Cleaning the data for Unemployment column  ** 
+
+
+```{r}
+
+
+# same thing for Unemployment column. clean the data. 
+
+# First, lets take a look at the histogram for the Unemployment to detect the outliers 
+
+
+
+hist(Adata8$Unemployment,
+  xlab = "Unemployment",
+  main = "Histogram of Unemployment",
+  breaks = sqrt(nrow(Adata8))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ Unemployment_out <- boxplot.stats(Adata8$Unemployment)$out
+ Unemployment_out
+# 
+# 
+#  To count how many outliers in the population
+  x6 <- data.frame(Unemployment_out)
+ x6
+  nrow(x6) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata9
+# 
+   Adata9<- Adata8[-which(Adata8$Unemploymen %in% Unemployment_out),] # here we removed outlier
+# 
+# 
+ Adata9
+#  
+  hist(Adata9$Unemployment,
+   xlab = "Unemployment",
+   main = "Histogram of Unemployment",
+   breaks = sqrt(nrow(Adata9))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata9$Unemployment)
+ mean(Adata9$Unemployment)
+min (Adata9$Unemployment)
+ 
+
+
 
 ```
 
@@ -121,12 +449,17 @@ max(Adata3$Income)
 
 
 
-**Like  **
+**The final data set.  ** 
+
 
 ```{r}
 
 
+Adata9 
 
+str(Adata9)
+
+summary(Adata9)
 
 
 
@@ -134,7 +467,9 @@ max(Adata3$Income)
 
 ```{r}
 
-# Ignore this chunk, I just was trying to use leaflet to create maps. 
+# Ignore this chunk. 
+
+#I just was trying to use leaflet to create maps. 
 
 # install.packages("httpuv")
 # 
@@ -152,6 +487,29 @@ max(Adata3$Income)
 #   addMarkers(lng=174.768, lat=-36.852, popup="Adata3$Income")
 # m  # Print the map
 
+
+
+
+# avg = mean(Adata3$Income[!Adata3$Income])
+# #avg 
+
+
+
+# Adata_test=Adata3 
+# 
+# #Adata_test
+# 
+# Adata_test[which(Adata$Income %in% income_out),"Income"]= 0 # to replace the outliers values with 0 
+# 
+# Adata_test
+#  
+#  #income_out
+#  
+#  #df$Variable1[df$outlier] = avg
+# 
+# 
+# 
+# #Adata_test[which(Adata$Income %in% income_out),] = 4
 
 ```
 
