@@ -1,7 +1,7 @@
 ---
 title: "Project"
 author: "Data lovers"
-date: "10 oct 2021"
+date: "02 Nov 2021"
 # date: "`r Sys.Date()`"
 output:
   html_document:
@@ -27,7 +27,7 @@ options(scientific=T, digits = 3)
 # use scipen=999 to prevent scientific notation at all times
 ```
 
-
+### Data importing
 
 **importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
 
@@ -54,6 +54,7 @@ summary(Adata)
 ```
 
 
+### Data Cleaning
 
 ***Cleaning the data. removing the outliers and the NA from the income. Saving the resulting dataframe as Adata2. **
 
@@ -448,7 +449,7 @@ min (Adata9$Unemployment)
 
 
 
-
+### Final dataset and SD calcautions
 
 **The final data set and calculating SD for our columns to check for data spread.** 
 
@@ -475,7 +476,7 @@ sd(Adata9$Unemployment)
 ```
 
 
-
+### Normality tets
 **Normality tests  ** 
 **The following graphs are the normality test for our desired columns.** 
 
@@ -566,118 +567,91 @@ qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution")
 
 
 
+### Tests
 
 
+**tests and results**
 
-
-
-
-
-
-```{r}
-
-# Ignore this chunk. 
-
-#I just was trying to use leaflet to create maps. 
-
-# install.packages("httpuv")
-# 
-# library(leaflet)
-# 
-# 
-# water_locations_map <- leaflet(Adata3$Income) %>%
-#   addTiles() %>%
-#   addCircleMarkers(lng = ~location.longitude,
-#                    lat = ~location.latitude)
-
-
-# m <- leaflet() %>%
-#   addTiles() %>%  # Add default OpenStreetMap map tiles
-#   addMarkers(lng=174.768, lat=-36.852, popup="Adata3$Income")
-# m  # Print the map
-
-
-
-
-# avg = mean(Adata3$Income[!Adata3$Income])
-# #avg 
-
-
-
-# Adata_test=Adata3 
-# 
-# #Adata_test
-# 
-# Adata_test[which(Adata$Income %in% income_out),"Income"]= 0 # to replace the outliers values with 0 
-# 
-# Adata_test
-#  
-#  #income_out
-#  
-#  #df$Variable1[df$outlier] = avg
-# 
-# 
-# 
-# #Adata_test[which(Adata$Income %in% income_out),] = 4
-
-```
-
-
-### Q
-
-**. **
-
-
-```{r}
-
-
- 
-```
-
-
-### Q
-
-**? **
-
-```{r, results='hold'}
-
-
-```
-
-
-
-### Q
-
-**W **
-
-```{r, results='hold'}
-
-
-```
-
-
-
-### Question 7
-
-**f **
+First, let's start to get a general idea of how poverty relates to all the factors by looking at the correlation matrix between 'Poverty' and the other variables.
 
 ```{r Q7, results='hold'}
-
-
-
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+cor(subset1)
 ```
 
+If we look at the correlation matrix, we can see that the variables 'Income','ChildPoverty','Professional','Service','Production', 'WorkAtHome','PublicWork','SelfEmployed', and 'Unemployment' has relevantly high correlation. Therefore, we would like to compute some tests to see if they are truly the factors that affects poverty. 
 
+We will now perform a two sample t-test to see if the counties with different income have different poverty. To setup, we divide the data into two parts (one with income values above the average income, the other with income values below average income) and take a sample of size 50. We set our hypothesis as:
 
-### Q
+$H_0$: $\mu_{upper}=\mu_{lower}$, the two sub-datasets have the same average poverty.
+$H_1$: $\mu_{upper}\neq\mu_{lower}$, the two sub-datasets do not have the same average poverty.
+
+```{r income test,results='hold'}
+set.seed(123)
+income_upper<-Adata9[Adata9$Income>mean(Adata9$Income),]
+income_lower<-Adata9[Adata9$Income<mean(Adata9$Income),]
+iu_sample<-income_upper[sample(nrow(income_upper),50),]
+il_sample<-income_lower[sample(nrow(income_lower),50),]
+income_ttest<-t.test(iu_sample$Poverty,il_sample$Poverty)
+income_ttest
+```
+
+Since the p-value we got from the t-test is $2*10^{-13}$ which is smaller than a $\alpha$ value of 0.05, we have sufficient evidence to reject $H_0$ and conclude that there is a difference between the mean poverty for the two groups. Thus, 'poverty' is affected by 'Income'.
+
+```{r professional test,results='hold'}
+set.seed(123)
+prof_upper<-Adata9[Adata9$Professional>mean(Adata9$Professional),]
+prof_lower<-Adata9[Adata9$Professional<mean(Adata9$Professional),]
+pu_sample<-prof_upper[sample(nrow(prof_upper),50),]
+pl_sample<-prof_lower[sample(nrow(prof_lower),50),]
+prof_ttest<-t.test(pu_sample$Poverty,pl_sample$Poverty)
+prof_ttest
+```
+
+```{r service test,results='hold'}
+set.seed(123)
+serv_upper<-Adata9[Adata9$Service>mean(Adata9$Service),]
+serv_lower<-Adata9[Adata9$Service<mean(Adata9$Service),]
+su_sample<-serv_upper[sample(nrow(serv_upper),50),]
+sl_sample<-serv_lower[sample(nrow(serv_lower),50),]
+serv_ttest<-t.test(su_sample$Poverty,sl_sample$Poverty)
+serv_ttest
+```
+
+```{r production test1,results='hold'}
+set.seed(123)
+prod_upper<-Adata9[Adata9$Production>mean(Adata9$Production),]
+prod_lower<-Adata9[Adata9$Production<mean(Adata9$Production),]
+produ_sample<-prod_upper[sample(nrow(prod_upper),50),]
+prodl_sample<-prod_lower[sample(nrow(prod_lower),50),]
+prod_ttest<-t.test(produ_sample$Poverty,prodl_sample$Poverty)
+prod_ttest
+```
+
+```{r production test2,results='hold'}
+set.seed(123)
+WAH_upper<-Adata9[Adata9$WorkAtHome>mean(Adata9$WorkAtHome),]
+WAH_lower<-Adata9[Adata9$WorkAtHome<mean(Adata9$WorkAtHome),]
+wu_sample<-WAH_upper[sample(nrow(WAH_upper),50),]
+wl_sample<-WAH_lower[sample(nrow(WAH_lower),50),]
+WAH_ttest<-t.test(wu_sample$Poverty,wl_sample$Poverty)
+WAH_ttest
+```
+
+```{r production test3,results='hold'}
+set.seed(123)
+WAH_upper<-Adata9[Adata9$WorkAtHome>mean(Adata9$WorkAtHome),]
+WAH_lower<-Adata9[Adata9$WorkAtHome<mean(Adata9$WorkAtHome),]
+wu_sample<-WAH_upper[sample(nrow(WAH_upper),50),]
+wl_sample<-WAH_lower[sample(nrow(WAH_lower),50),]
+WAH_ttest<-t.test(wu_sample$Poverty,wl_sample$Poverty)
+WAH_ttest
+```
+###. 
 
 **.**
 
-```{r Q8, results='hold'}
 
-
-
-```
 
 
 
