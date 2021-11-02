@@ -540,9 +540,9 @@ subset1<-subset(Adata9,select = -c(CensusId,State,County))
 cor(subset1)
 ```
 
-If we look at the correlation matrix, we can see that the variables 'Income','ChildPoverty','Professional','Service','Production', 'WorkAtHome','PublicWork','SelfEmployed', and 'Unemployment' has relevantly high correlation. Therefore, we would like to compute some tests to see if they are truly the factors that affects poverty. 
+If we look at the correlation matrix, we can see that the variables 'Income','ChildPoverty','Professional','Service','Production', 'WorkAtHome','Unemployment' has relevantly high correlation. Therefore, we would like to compute some tests to see if they are truly the factors that affects poverty. 
 
-We will now perform a two sample t-test to see if the counties with different income have different poverty. To setup, we divide the data into two parts (one with income values above the average income, the other with income values below average income) and take a sample of size 50. We set our hypothesis as:
+We will now perform a two sample t-test to see if the counties with different income have different poverty. To setup, we divide the data into two parts (one with income values above the average income, the other with income values below average income) and take a sample of size 30. We set our hypothesis as:
 
 $H_0$: $\mu_{upper}=\mu_{lower}$, the two sub-datasets have the same average poverty.
 $H_1$: $\mu_{upper}\neq\mu_{lower}$, the two sub-datasets do not have the same average poverty.
@@ -551,63 +551,35 @@ $H_1$: $\mu_{upper}\neq\mu_{lower}$, the two sub-datasets do not have the same a
 set.seed(123)
 income_upper<-Adata9[Adata9$Income>mean(Adata9$Income),]
 income_lower<-Adata9[Adata9$Income<mean(Adata9$Income),]
-iu_sample<-income_upper[sample(nrow(income_upper),50),]
-il_sample<-income_lower[sample(nrow(income_lower),50),]
+iu_sample<-income_upper[sample(nrow(income_upper),30),]
+il_sample<-income_lower[sample(nrow(income_lower),30),]
 income_ttest<-t.test(iu_sample$Poverty,il_sample$Poverty)
 income_ttest
 ```
 
-Since the p-value we got from the t-test is $2*10^{-13}$ which is smaller than a $\alpha$ value of 0.05, we have sufficient evidence to reject $H_0$ and conclude that there is a difference between the mean poverty for the two groups. Thus, 'poverty' is affected by 'Income'.
+Since the p-value we got from the t-test is $4*10^{-7}$ which is smaller than a $\alpha$ value of 0.05, we have sufficient evidence to reject $H_0$ and conclude that there is a difference between the mean poverty for the two groups. Thus, 'poverty' is affected by 'Income'.
 
 ```{r professional test,results='hold'}
 set.seed(123)
 prof_upper<-Adata9[Adata9$Professional>mean(Adata9$Professional),]
 prof_lower<-Adata9[Adata9$Professional<mean(Adata9$Professional),]
-pu_sample<-prof_upper[sample(nrow(prof_upper),50),]
-pl_sample<-prof_lower[sample(nrow(prof_lower),50),]
+pu_sample<-prof_upper[sample(nrow(prof_upper),30),]
+pl_sample<-prof_lower[sample(nrow(prof_lower),30),]
 prof_ttest<-t.test(pu_sample$Poverty,pl_sample$Poverty)
 prof_ttest
 ```
 
-```{r service test,results='hold'}
+```{r professional test,results='hold'}
 set.seed(123)
 serv_upper<-Adata9[Adata9$Service>mean(Adata9$Service),]
 serv_lower<-Adata9[Adata9$Service<mean(Adata9$Service),]
-su_sample<-serv_upper[sample(nrow(serv_upper),50),]
-sl_sample<-serv_lower[sample(nrow(serv_lower),50),]
+su_sample<-serv_upper[sample(nrow(serv_upper),30),]
+sl_sample<-serv_lower[sample(nrow(serv_lower),30),]
 serv_ttest<-t.test(su_sample$Poverty,sl_sample$Poverty)
 serv_ttest
 ```
 
-```{r production test,results='hold'}
-set.seed(123)
-prod_upper<-Adata9[Adata9$Production>mean(Adata9$Production),]
-prod_lower<-Adata9[Adata9$Production<mean(Adata9$Production),]
-produ_sample<-prod_upper[sample(nrow(prod_upper),50),]
-prodl_sample<-prod_lower[sample(nrow(prod_lower),50),]
-prod_ttest<-t.test(produ_sample$Poverty,prodl_sample$Poverty)
-prod_ttest
-```
 
-```{r production test,results='hold'}
-set.seed(123)
-WAH_upper<-Adata9[Adata9$WorkAtHome>mean(Adata9$WorkAtHome),]
-WAH_lower<-Adata9[Adata9$WorkAtHome<mean(Adata9$WorkAtHome),]
-wu_sample<-WAH_upper[sample(nrow(WAH_upper),50),]
-wl_sample<-WAH_lower[sample(nrow(WAH_lower),50),]
-WAH_ttest<-t.test(wu_sample$Poverty,wl_sample$Poverty)
-WAH_ttest
-```
-
-```{r production test,results='hold'}
-set.seed(123)
-WAH_upper<-Adata9[Adata9$WorkAtHome>mean(Adata9$WorkAtHome),]
-WAH_lower<-Adata9[Adata9$WorkAtHome<mean(Adata9$WorkAtHome),]
-wu_sample<-WAH_upper[sample(nrow(WAH_upper),50),]
-wl_sample<-WAH_lower[sample(nrow(WAH_lower),50),]
-WAH_ttest<-t.test(wu_sample$Poverty,wl_sample$Poverty)
-WAH_ttest
-```
 ### Q
 
 **.**
