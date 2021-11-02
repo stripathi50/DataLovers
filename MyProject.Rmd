@@ -63,6 +63,7 @@ summary(Adata)
 # We started with "income", first we polte it to identify the outlier and then removing it. 
 # Also , we removed the null values because it make error while do mathematics calculation. 
 # Then we follow the same steps for the remaining columns that we will gonna use in this phase. 
+# Currently our desired columns: TotalPop, Income, Poverty, ChildPoverty, Employed, Unemployment.  
 
 ################################################################################
 
@@ -464,6 +465,106 @@ summary(Adata9)
 
 
 ```
+
+
+
+**Normality tests  ** 
+**The following graphs are the normality test for our desired columns.** 
+
+**From these graphs, we noticed that the columns that use rates instead of total number are normally distributed like: income, poverty,child poverty, unemployment. While the columns that use total numbers are not normally distributed like: Total population and Employed columns.  ** 
+
+
+```{r}
+
+
+library(ggplot2)
+
+
+
+#This code enable us to use qqplot.data function (to draw a line)
+
+qqplot.data <- function (vec) # argument: vector of numbers
+{
+  y <- quantile(vec[!is.na(vec)], c(0.25, 0.75))
+  x <- qnorm(c(0.25, 0.75))
+  slope <- diff(y)/diff(x)
+  int <- y[1L] - slope * x[1L]
+  d <- data.frame(resids = vec)
+  ggplot(d, aes(sample = resids)) + stat_qq() + geom_abline(slope = slope, intercept = int)
+  
+}
+
+# Histogram that use ggplot: 
+
+# 1 Graph for income distribution:
+g1 <- qqplot.data(Adata9$Income)+labs(title = "Income Distribution")
+g1
+
+# 2 Graph for population distribution
+g2 <- qqplot.data(Adata9$TotalPop)+labs(title = "Population Distribution")
+g2
+
+
+# 3 Graph for Poverty distribution
+g3 <- qqplot.data(Adata9$Poverty)+labs(title = "Poverty Distribution")
+g3
+
+
+# 4 Graph for child poverty distribution
+g4 <- qqplot.data(Adata9$ChildPoverty)+labs(title = "Child Poverty Distribution")
+g4
+
+
+# 5 Graph for Employed distribution
+g5 <- qqplot.data(Adata9$Employed)+labs(title = "Employed Distribution")
+g5
+
+
+# 6 Graph for unemployment distribution
+g5 <- qqplot.data(Adata9$Unemployment)+labs(title = "Unemployment Distribution")
+g5
+
+###########################################
+
+
+
+# Additional graphs for two variables only.  QQ-plot that use qqnorm
+
+# 1 Graph for income
+qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution") 
+
+#2 Graph for population
+ qqnorm(Adata9$TotalPop,main = "Q-Q plot. Population Distribution")
+
+ 
+#3 Graph for Poverty
+ qqnorm(Adata9$Poverty,main = "Q-Q plot. Poverty Distribution")
+
+ 
+#4 Graph for child poverty
+ qqnorm(Adata9$ChildPoverty,main = "Q-Q plot. Child Poverty Distribution")
+
+ #4 Graph for Employed
+ qqnorm(Adata9$Employed,main = "Q-Q plot. Employed Distribution")
+ 
+#5 Graph for unemployment
+ qqnorm(Adata9$Unemployment,main = "Q-Q plot. Unemlpyment Distribution")
+ 
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r}
 
