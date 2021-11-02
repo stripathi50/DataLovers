@@ -450,20 +450,28 @@ min (Adata9$Unemployment)
 
 
 
-**The final data set.  ** 
+**The final data set and calculating SD for our columns to check for data spread.** 
 
 
 ```{r}
 
-
+# This is the final data set:
 Adata9 
 
 str(Adata9)
 
 summary(Adata9)
 
+#########################
 
+# Standard deviation for the columns: 
 
+sd(Adata9$Income)
+sd(Adata9$TotalPop)
+sd(Adata9$Poverty)
+sd(Adata9$ChildPoverty)
+sd(Adata9$Employed)
+sd(Adata9$Unemployment)
 ```
 
 
