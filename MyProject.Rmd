@@ -623,44 +623,95 @@ qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution")
 ```
 
 
-### Q
-
-**. **
-
 
 ```{r}
+#7. What factors affect poverty in countries? 
+loadPkg("ggplot2")
+loadPkg("gridExtra")
+loadPkg("ggcorrplot")
+xkablesummary(Adata9)
+
+# Poverty in different states 
+State_fact<-as.factor(Adata9$State)
+Check<-aggregate(x= Adata9$Poverty, by= list(Adata9$State),FUN= sum)
+Check
+sum(Check$x)
+pie_labels <- paste0(Check$Group.1, " = ", round(100 * Check$x/sum(Check$x), 2), "%")
+population_pie_Chart = pie(Check$x,labels = pie_labels, radius=1, main="Pie Chart Of Poverty In Different States Of USA", clockwise = TRUE)
+library(ggplot2)
+
+#factors affecting poverty 
+
+#1. unemployement
+
+Check2<-aggregate(x=Adata9$Unemployment, by= list(Adata9$State), FUN= sum)
+Check2
+
+#barplot(Check2$x, main = "State Vs Unemployement", names.arg = Check2$Group.1, xlab = "States", ylab = "Unemployement Scale", angle = 90, cey.axis = 1)
+Unemployment_Bar_graph<-barplot(Check2$x,names.arg = Check2$Group.1, xlab = "States", ylab = "Unemployement Scale",  main = "State Vs Unemployement", las = 3)
+
+#2. population and income
+
+Check3<-aggregate(x=Adata9$TotalPop, by= list(Adata9$State), FUN= sum)
+Check3
 
 
- 
+histPop <- ggplot(data=Check3, aes(x)) + 
+  geom_histogram(breaks=seq(20000, 3000000, by = 100000), 
+                 col="red", 
+                 fill="#00aa22", 
+                 alpha = .7) + # opacity
+  labs(title="Population of the States") +
+  labs(x="Population", y="Frequency") 
+
+Check4<-aggregate(x=Adata9$Income, by= list(Adata9$State), FUN= sum)
+Check4
+
+histIncome <- ggplot(data=Check4, aes(x)) + 
+  geom_histogram(breaks=seq(20000, 3000000, by = 100000), 
+                 col="red", 
+                 fill="#0000aa", 
+                 alpha = .7) + # opacity
+  labs(title="Income of the States") +
+  labs(x="Income", y="Frequency")
+
+grid.arrange(histPop, histIncome, ncol=2, nrow=1)
+
+
+#3. Impact of unemployement, population and income on Poverty 
+Income_pop <- ggplot(Adata9) +
+    geom_point(aes(x = Income , y = TotalPop, size = 2 , main = "Population vs Income"), alpha = 0.7 , col = "red")
+abline(lm(Adata9$TotalPop ~ Adata9$Income), col = "blue", lwd = 3)
+text(paste("Correlation:", round(cor(Adata9$Income, Adata9$TotalPop), 2), x= 50000 , y = 60000))
+Unemployment_Pop <- ggplot(Adata9) +
+    geom_point(aes(x = Unemployment , y = TotalPop, size = 2, main = "Population vs Unemployement"), alpha = 0.7, col = "red")
+abline(lm(Adata9$Unemployment ~ Adata9$Income), col = "blue", lwd = 3)
+text(paste("Correlation:", round(cor(Adata9$Income, Adata9$TotalPop), 2),x = 10, y = 60000))
+
+grid.arrange(Income_pop, Unemployment_Pop, ncol=2, nrow=1)
+
+#Correlation employed vs Income
+library(ggcorrplot)
+Check5 <- data.frame(Adata9$Employed,Adata9$Income)
+data(Check5)
+corr <- round(cor(Check5), 1)
+ggcorrplot(corr, hc.order = TRUE, outline.col = "white")
+#Correlation unemployement vs Income
+Check6<- data.frame(Adata9$Unemployment,Adata9$Income)
+data(Check6)
+corr <- round(cor(Check6), 1)
+ggcorrplot(corr, hc.order = TRUE, outline.col = "white")
+#Correlation population vs unemployement
+Check7<- data.frame(Adata9$TotalPop,Adata9$Unemployment)
+data(Check7)
+corr <- round(cor(Check7), 1)
+ggcorrplot(corr, hc.order = TRUE, outline.col = "white")
+#Correlation population vs Income
+Check8<- data.frame(Adata9$TotalPop,Adata9$Income)
+data(Check8)
+corr <- round(cor(Check8), 1)
+ggcorrplot(corr, hc.order = TRUE, outline.col = "white")
 ```
-
-
-### Q
-
-**? **
-
-```{r, results='hold'}
-
-
-```
-
-
-
-### Q
-
-**W **
-
-```{r, results='hold'}
-
-
-```
-
-
-
-### Question 7
-
-**f **
-
 
 
 **tests and results**
