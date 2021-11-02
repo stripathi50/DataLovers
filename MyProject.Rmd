@@ -674,7 +674,7 @@ cor(subset1)
 
 If we look at the correlation matrix, we can see that the variables 'Income','ChildPoverty','Professional','Service','Production', 'WorkAtHome','PublicWork','SelfEmployed', and 'Unemployment' has relevantly high correlation. Therefore, we would like to compute some tests to see if they are truly the factors that affects poverty. 
 
-We will now perform a two sample t-test to see if the counties with different income have different poverty. To setup, we divide the data into two parts (one with income values above the average income, the other with income values below average income) and take a sample of size 50. We set our hypothesis as:
+We will now perform a two sample t-test to see if the counties with different income have different poverty. To setup, we divide the data into two parts (one with income values above the average income, the other with income values below average income) and take a sample of size 50, we set our $\alpha$ value as 0.05,and our hypothesis as:
 
 $H_0$: $\mu_{upper}=\mu_{lower}$, the two sub-datasets have the same average poverty.
 $H_1$: $\mu_{upper}\neq\mu_{lower}$, the two sub-datasets do not have the same average poverty.
@@ -701,7 +701,9 @@ prof_ttest<-t.test(pu_sample$Poverty,pl_sample$Poverty)
 prof_ttest
 ```
 
-```{r service test,results='hold'}
+P-value for 'Professional' is 0.04 which is less than 0.05, we reject the null and state that 'Professional' is a affecting factor on 'Poverty'.
+
+```{r Service test,results='hold'}
 set.seed(123)
 serv_upper<-Adata9[Adata9$Service>mean(Adata9$Service),]
 serv_lower<-Adata9[Adata9$Service<mean(Adata9$Service),]
@@ -710,6 +712,8 @@ sl_sample<-serv_lower[sample(nrow(serv_lower),50),]
 serv_ttest<-t.test(su_sample$Poverty,sl_sample$Poverty)
 serv_ttest
 ```
+
+P-value for 'Service' is 0.01 which is smaller than 0.05, we reject the null and state that 'Service' is an affecting factor for 'Poverty'.
 
 ```{r production test,results='hold'}
 set.seed(123)
@@ -721,7 +725,9 @@ prod_ttest<-t.test(produ_sample$Poverty,prodl_sample$Poverty)
 prod_ttest
 ```
 
-```{r production test,results='hold'}
+P-value for 'Production' is 0.8 which is greater than 0.05, we can not reject $H_0$, and can not conclude that 'Production' is an affecting factors for 'Poverty'.
+
+```{r WorkAtHome test,results='hold'}
 set.seed(123)
 WAH_upper<-Adata9[Adata9$WorkAtHome>mean(Adata9$WorkAtHome),]
 WAH_lower<-Adata9[Adata9$WorkAtHome<mean(Adata9$WorkAtHome),]
@@ -731,16 +737,64 @@ WAH_ttest<-t.test(wu_sample$Poverty,wl_sample$Poverty)
 WAH_ttest
 ```
 
-```{r production test,results='hold'}
+P-value for "WorkAtHome' is extremely small, we have sufficient evidence to state that "WorkAtHome' is an effecting factor for 'Poverty'.
+
+```{r PublicWork test,results='hold'}
 set.seed(123)
-WAH_upper<-Adata9[Adata9$WorkAtHome>mean(Adata9$WorkAtHome),]
-WAH_lower<-Adata9[Adata9$WorkAtHome<mean(Adata9$WorkAtHome),]
-wu_sample<-WAH_upper[sample(nrow(WAH_upper),50),]
-wl_sample<-WAH_lower[sample(nrow(WAH_lower),50),]
-WAH_ttest<-t.test(wu_sample$Poverty,wl_sample$Poverty)
-WAH_ttest
+PW_upper<-Adata9[Adata9$PublicWork>mean(Adata9$PublicWork),]
+PW_lower<-Adata9[Adata9$PublicWork<mean(Adata9$PublicWork),]
+pubu_sample<-PW_upper[sample(nrow(PW_upper),50),]
+publ_sample<-PW_lower[sample(nrow(PW_lower),50),]
+PW_ttest<-t.test(pubu_sample$Poverty,publ_sample$Poverty)
+PW_ttest
 ```
+
+P-value for 'PublicWork' is greater than 0.05, so it is not an effecting factor for 'Poverty'.
+
+```{r SelfEmployed test,results='hold'}
+set.seed(123)
+SE_upper<-Adata9[Adata9$SelfEmployed>mean(Adata9$SelfEmployed),]
+SE_lower<-Adata9[Adata9$SelfEmployed<mean(Adata9$SelfEmployed),]
+semu_sample<-SE_upper[sample(nrow(SE_upper),50),]
+seml_sample<-SE_lower[sample(nrow(SE_lower),50),]
+SE_ttest<-t.test(semu_sample$Poverty,seml_sample$Poverty)
+SE_ttest
+```
+
+P-value for 'SelfEmployment' is 0.1 which is greater than 0.05, we can not reject $H_0$,  so it is not an effecting factor for 'Poverty'.
+
+```{r UnEmployment test,results='hold'}
+set.seed(123)
+UE_upper<-Adata9[Adata9$Unemployment>mean(Adata9$Unemployment),]
+UE_lower<-Adata9[Adata9$Unemployment<mean(Adata9$Unemployment),]
+uemu_sample<-UE_upper[sample(nrow(UE_upper),50),]
+ueml_sample<-UE_lower[sample(nrow(UE_lower),50),]
+UE_ttest<-t.test(uemu_sample$Poverty,ueml_sample$Poverty)
+UE_ttest
+```
+
+P-value for 'Unemployment' is $1*10^{-6}$, so we have sufficient evidence to reject null and conclude that it is an effecting factor for 'Poverty'.
+
+Noticing that 'State' is left out from our correlation matrix since it is a categorical variable, we want to perform an ANOVA test to see if there's difference in 'Poverty' across different states.
+
+**In this case, 'State' is an effecting factor for 'Poverty'.
+
+```{r State ANOVA test, results='hold'}
+anostate<-aov(Poverty~State,data = Adata9)
+summary(anostate)
+```
+
+As we can see in the results of ANOVA test, our p-value is extremely small, so we have sufficient evidence to reject the null and conclude that there is difference in 'Poverty' for different states. Finally, we will perform a Post-hoc test to see the pairs of states that have different 'Poverty' as below.
+
+```{r State Post-hoc test,results='hold'}
+tukeyAoV <- TukeyHSD(anostate)
+tukeyAoV
+```
+
+As a conclusion for all the tests we performed above, the effecting factors for 'Poverty' are 'Income', 'Professional', 'Service', 'WorkAtHome', 'Unemployment', and 'State'.
+
 ### Q
+
 
 **.**
 
