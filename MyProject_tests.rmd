@@ -536,12 +536,48 @@ summary(Adata9)
 First, let's start to get a general idea of how poverty relates to all the factors by looking at the correlation matrix between 'Poverty' and the other variables.
 
 ```{r Q7, results='hold'}
-str(Adata9)
-#cor(Adata9)
-
-
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+cor(subset1)
 ```
 
+If we look at the correlation matrix, we can see that the variables 'Income','ChildPoverty','Professional','Service','Production', 'WorkAtHome','Unemployment' has relevantly high correlation. Therefore, we would like to compute some tests to see if they are truly the factors that affects poverty. 
+
+We will now perform a two sample t-test to see if the counties with different income have different poverty. To setup, we divide the data into two parts (one with income values above the average income, the other with income values below average income) and take a sample of size 30. We set our hypothesis as:
+
+$H_0$: $\mu_{upper}=\mu_{lower}$, the two sub-datasets have the same average poverty.
+$H_1$: $\mu_{upper}\neq\mu_{lower}$, the two sub-datasets do not have the same average poverty.
+
+```{r income test,results='hold'}
+set.seed(123)
+income_upper<-Adata9[Adata9$Income>mean(Adata9$Income),]
+income_lower<-Adata9[Adata9$Income<mean(Adata9$Income),]
+iu_sample<-income_upper[sample(nrow(income_upper),30),]
+il_sample<-income_lower[sample(nrow(income_lower),30),]
+income_ttest<-t.test(iu_sample$Poverty,il_sample$Poverty)
+income_ttest
+```
+
+Since the p-value we got from the t-test is $4*10^{-7}$ which is smaller than a $\alpha$ value of 0.05, we have sufficient evidence to reject $H_0$ and conclude that there is a difference between the mean poverty for the two groups. Thus, 'poverty' is affected by 'Income'.
+
+```{r professional test,results='hold'}
+set.seed(123)
+prof_upper<-Adata9[Adata9$Professional>mean(Adata9$Professional),]
+prof_lower<-Adata9[Adata9$Professional<mean(Adata9$Professional),]
+pu_sample<-prof_upper[sample(nrow(prof_upper),30),]
+pl_sample<-prof_lower[sample(nrow(prof_lower),30),]
+prof_ttest<-t.test(pu_sample$Poverty,pl_sample$Poverty)
+prof_ttest
+```
+
+```{r professional test,results='hold'}
+set.seed(123)
+serv_upper<-Adata9[Adata9$Service>mean(Adata9$Service),]
+serv_lower<-Adata9[Adata9$Service<mean(Adata9$Service),]
+su_sample<-serv_upper[sample(nrow(serv_upper),30),]
+sl_sample<-serv_lower[sample(nrow(serv_lower),30),]
+serv_ttest<-t.test(su_sample$Poverty,sl_sample$Poverty)
+serv_ttest
+```
 
 
 ### Q
