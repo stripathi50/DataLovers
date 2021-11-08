@@ -27,11 +27,31 @@ options(scientific=T, digits = 3)
 # use scipen=999 to prevent scientific notation at all times
 ```
 
-### Data importing
 
-**importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
+### Chapter 1:Introduction.
+
+
+
+
+
+
+
+### Chapter 2:Description of the Data.
+
+
+
+
+
+
+
+
+
 
 ```{r step1}
+
+
+# importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
+
 Adata1 <- data.frame(read.csv("acs2015_county_data.csv",header = TRUE))
 
 str(Adata1)
@@ -54,7 +74,7 @@ summary(Adata)
 ```
 
 
-### Data Cleaning
+### Chapter 3: Data Cleaning and Normality tests.
 
 ***Cleaning the data. removing the outliers and the NA from the income. Saving the resulting dataframe as Adata2. **
 
@@ -449,7 +469,7 @@ min (Adata9$Unemployment)
 
 
 
-### Final dataset and SD calcautions
+**Final dataset and SD calcautions.**
 
 **The final data set and calculating SD for our columns to check for data spread.** 
 
@@ -476,7 +496,7 @@ sd(Adata9$Unemployment)
 ```
 
 
-### Normality tets
+
 **Normality tests  ** 
 **The following graphs are the normality test for our desired columns.** 
 
@@ -565,13 +585,13 @@ qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution")
 ```
 
 
-### Graphs and relationship
-**What factors affect poverty in countries?  ** 
+### Chapter 4: Graphs and relationship
+**What factors affect poverty in counties?  ** 
 
 ```{r}
 
 
-#7. What factors affect poverty in countries? 
+#7. What factors affect poverty in counties? 
 
 loadPkg("ggplot2")
 loadPkg("gridExtra")
@@ -671,7 +691,7 @@ ggcorrplot(corr, hc.order = TRUE, outline.col = "white")+labs(title = "Populatio
 ```
 
 
-### Tests
+### Chapter 5: Tests
 **tests and results**
 
 First, let's start to get a general idea of how poverty relates to all the factors by looking at the correlation matrix between 'Poverty' and the other variables.
@@ -805,8 +825,12 @@ As a conclusion for all the tests we performed above, the effecting factors for 
 
 
 
+### Chapter 6: Conclusion. 
 
-###. 
+
+
+
+
 
 **.**
 
