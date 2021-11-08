@@ -1,7 +1,7 @@
 ---
 title: "Project"
 author: "Data lovers"
-date: "10 oct 2021"
+date: "02 Nov 2021"
 # date: "`r Sys.Date()`"
 output:
   html_document:
@@ -27,7 +27,7 @@ options(scientific=T, digits = 3)
 # use scipen=999 to prevent scientific notation at all times
 ```
 
-
+### Data importing
 
 **importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
 
@@ -54,6 +54,7 @@ summary(Adata)
 ```
 
 
+### Data Cleaning
 
 ***Cleaning the data. removing the outliers and the NA from the income. Saving the resulting dataframe as Adata2. **
 
@@ -448,7 +449,7 @@ min (Adata9$Unemployment)
 
 
 
-
+### Final dataset and SD calcautions
 
 **The final data set and calculating SD for our columns to check for data spread.** 
 
@@ -475,7 +476,7 @@ sd(Adata9$Unemployment)
 ```
 
 
-
+### Normality tets
 **Normality tests  ** 
 **The following graphs are the normality test for our desired columns.** 
 
@@ -564,68 +565,14 @@ qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution")
 ```
 
 
-
-
-
-
-
-
-
-
-
+### Graphs and relationship
+**What factors affect poverty in countries?  ** 
 
 ```{r}
 
-# Ignore this chunk. 
 
-#I just was trying to use leaflet to create maps. 
-
-# install.packages("httpuv")
-# 
-# library(leaflet)
-# 
-# 
-# water_locations_map <- leaflet(Adata3$Income) %>%
-#   addTiles() %>%
-#   addCircleMarkers(lng = ~location.longitude,
-#                    lat = ~location.latitude)
-
-
-# m <- leaflet() %>%
-#   addTiles() %>%  # Add default OpenStreetMap map tiles
-#   addMarkers(lng=174.768, lat=-36.852, popup="Adata3$Income")
-# m  # Print the map
-
-
-
-
-# avg = mean(Adata3$Income[!Adata3$Income])
-# #avg 
-
-
-
-# Adata_test=Adata3 
-# 
-# #Adata_test
-# 
-# Adata_test[which(Adata$Income %in% income_out),"Income"]= 0 # to replace the outliers values with 0 
-# 
-# Adata_test
-#  
-#  #income_out
-#  
-#  #df$Variable1[df$outlier] = avg
-# 
-# 
-# 
-# #Adata_test[which(Adata$Income %in% income_out),] = 4
-
-```
-
-
-
-```{r}
 #7. What factors affect poverty in countries? 
+
 loadPkg("ggplot2")
 loadPkg("gridExtra")
 loadPkg("ggcorrplot")
@@ -680,45 +627,56 @@ grid.arrange(histPop, histIncome, ncol=2, nrow=1)
 
 #3. Impact of unemployement, population and income on Poverty 
 Income_pop <- ggplot(Adata9) +
-    geom_point(aes(x = Income , y = TotalPop, size = 2 , main = "Population vs Income"), alpha = 0.7 , col = "red")
-abline(lm(Adata9$TotalPop ~ Adata9$Income), col = "blue", lwd = 3)
-text(paste("Correlation:", round(cor(Adata9$Income, Adata9$TotalPop), 2), x= 50000 , y = 60000))
-Unemployment_Pop <- ggplot(Adata9) +
-    geom_point(aes(x = Unemployment , y = TotalPop, size = 2, main = "Population vs Unemployement"), alpha = 0.7, col = "red")
-abline(lm(Adata9$Unemployment ~ Adata9$Income), col = "blue", lwd = 3)
-text(paste("Correlation:", round(cor(Adata9$Income, Adata9$TotalPop), 2),x = 10, y = 60000))
+    geom_point(aes(x = Income , y = TotalPop, size = 2 ), alpha = 0.7 , col = "red" )+labs(title = "Population vs Income")+labs(x="Income", y="Population" )
 
-grid.arrange(Income_pop, Unemployment_Pop, ncol=2, nrow=1)
+Unemployment_Pop <- ggplot(Adata9) +
+    geom_point(aes(x = Unemployment , y = TotalPop, size = 2), alpha = 0.7, col = "red")+labs(title = "Population vs Unemployement")+labs(x="Unemployement", y="Population" )
+
+Income_pop
+Unemployment_Pop
 
 #Correlation employed vs Income
+
 library(ggcorrplot)
+
 Check5 <- data.frame(Adata9$Employed,Adata9$Income)
-data(Check5)
-corr <- round(cor(Check5), 1)
-ggcorrplot(corr, hc.order = TRUE, outline.col = "white")
+
+corr <- round(cor(Check5), 3)
+ggcorrplot(corr, hc.order = TRUE, outline.col = "white")+labs(title = "Employed vs Income")+labs(x="Employed", y="Income" )
+
 #Correlation unemployement vs Income
+
 Check6<- data.frame(Adata9$Unemployment,Adata9$Income)
-data(Check6)
-corr <- round(cor(Check6), 1)
-ggcorrplot(corr, hc.order = TRUE, outline.col = "white")
+
+corr <- round(cor(Check6), 3)
+ggcorrplot(corr, hc.order = TRUE, outline.col = "white")+labs(title = "Unemployment vs Income")+labs(x="Unemployment", y="Income" )
+
 #Correlation population vs unemployement
+
 Check7<- data.frame(Adata9$TotalPop,Adata9$Unemployment)
-data(Check7)
-corr <- round(cor(Check7), 1)
-ggcorrplot(corr, hc.order = TRUE, outline.col = "white")
+
+corr <- round(cor(Check7), 3)
+ggcorrplot(corr, hc.order = TRUE, outline.col = "white")+labs(title = "Population vs Unemployment")+labs(x="Population", y="Unemployment" )
+
 #Correlation population vs Income
+
 Check8<- data.frame(Adata9$TotalPop,Adata9$Income)
-data(Check8)
-corr <- round(cor(Check8), 1)
-ggcorrplot(corr, hc.order = TRUE, outline.col = "white")
+
+corr <- round(cor(Check8), 3)
+ggcorrplot(corr, hc.order = TRUE, outline.col = "white")+labs(title = "Population vs Income")+labs(x="Population", y="Income" )
+
+
+
+
 ```
 
 
+### Tests
 **tests and results**
 
 First, let's start to get a general idea of how poverty relates to all the factors by looking at the correlation matrix between 'Poverty' and the other variables.
 
-```{r Q7, results='hold'}
+```{r sub, results='hold'}
 subset1<-subset(Adata9,select = -c(CensusId,State,County))
 cor(subset1)
 ```
@@ -837,23 +795,22 @@ summary(anostate)
 
 As we can see in the results of ANOVA test, our p-value is extremely small, so we have sufficient evidence to reject the null and conclude that there is difference in 'Poverty' for different states. Finally, we will perform a Post-hoc test to see the pairs of states that have different 'Poverty' as below.
 
-```{r State Post-hoc test,results='hold'}
+```{r State Post-hoc test}
 tukeyAoV <- TukeyHSD(anostate)
 tukeyAoV
 ```
 
 As a conclusion for all the tests we performed above, the effecting factors for 'Poverty' are 'Income', 'Professional', 'Service', 'WorkAtHome', 'Unemployment', and 'State'.
 
-### Q
 
+
+
+
+###. 
 
 **.**
 
-```{r Q8, results='hold'}
 
-
-
-```
 
 
 
