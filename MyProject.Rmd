@@ -84,7 +84,7 @@ summary(Adata)
 # We started with "income", first we polte it to identify the outlier and then removing it. 
 # Also , we removed the null values because it make error while do mathematics calculation. 
 # Then we follow the same steps for the remaining columns that we will gonna use in this phase. 
-# Currently our desired columns: TotalPop, Income, Poverty, ChildPoverty, Employed, Unemployment.  
+# Currently our desired columns: TotalPop, Income, Poverty, ChildPoverty, Employed, Unemployment, Production, WorkAtHome,PublicWork, SelfEmployed
 
 ################################################################################
 
@@ -441,15 +441,15 @@ hist(Adata8$Unemployment,
 # 
  #Now, we will remove the outliers from our dataset and store the clean result in Adata9
 # 
-   Adata9<- Adata8[-which(Adata8$Unemploymen %in% Unemployment_out),] # here we removed outlier
+   Adata10<- Adata8[-which(Adata8$Unemploymen %in% Unemployment_out),] # here we removed outlier
 # 
 # 
- Adata9
+ Adata10
 #  
-  hist(Adata9$Unemployment,
+  hist(Adata10$Unemployment,
    xlab = "Unemployment",
    main = "Histogram of Unemployment",
-   breaks = sqrt(nrow(Adata9))
+   breaks = sqrt(nrow(Adata10))
 ) # set number of bins
   
 
@@ -458,14 +458,264 @@ hist(Adata8$Unemployment,
  
 # 
 # # # Now we can calculate the max and the mean .. etc . 
- max(Adata9$Unemployment)
- mean(Adata9$Unemployment)
-min (Adata9$Unemployment)
+ max(Adata10$Unemployment)
+ mean(Adata10$Unemployment)
+min (Adata10$Unemployment)
  
 
 
 
 ```
+
+
+**Cleaning the data for Production column  ** 
+
+
+```{r}
+
+
+# same thing for Production column. clean the data. 
+
+# First, lets take a look at the histogram for the Production to detect the outliers 
+
+
+
+hist(Adata10$Production,
+  xlab = "Production",
+  main = "Histogram of Production",
+  breaks = sqrt(nrow(Adata10))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ production_out <- boxplot.stats(Adata10$Production)$out
+ production_out
+# 
+# 
+#  To count how many outliers in the population
+  x7 <- data.frame(production_out)
+ x7
+  nrow(x7) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata11
+# 
+   Adata11<- Adata10[-which(Adata10$Production %in% production_out),] # here we removed outlier
+# 
+# 
+ Adata11
+#  
+  hist(Adata11$Production,
+   xlab = "Production",
+   main = "Histogram of Production",
+   breaks = sqrt(nrow(Adata11))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata11$Production)
+ mean(Adata11$Production)
+min (Adata11$Production)
+ 
+
+
+
+
+
+
+```
+
+**Cleaning the data for WorkAtHome column  ** 
+
+```{r}
+
+
+# same thing for WorkAtHome column. clean the data. 
+
+# First, lets take a look at the histogram for the WorkAtHome to detect the outliers 
+
+
+
+hist(Adata11$WorkAtHome,
+  xlab = "WorkAtHome",
+  main = "Histogram of WorkAtHome",
+  breaks = sqrt(nrow(Adata11))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ WorkAtHome_out <- boxplot.stats(Adata11$WorkAtHome)$out
+ WorkAtHome_out
+# 
+# 
+#  To count how many outliers in the population
+  x8 <- data.frame(WorkAtHome_out)
+ x8
+  nrow(x8) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata11
+# 
+   Adata12<- Adata11[-which(Adata11$WorkAtHome %in% WorkAtHome_out),] # here we removed outlier
+# 
+# 
+ Adata12
+#  
+  hist(Adata12$WorkAtHome,
+   xlab = "WorkAtHome",
+   main = "Histogram of WorkAtHome",
+   breaks = sqrt(nrow(Adata12))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata12$WorkAtHome)
+ mean(Adata12$WorkAtHome)
+min (Adata12$WorkAtHome)
+ 
+
+
+
+
+
+
+```
+
+**Cleaning the data for PublicWork column  ** 
+
+
+```{r}
+
+
+# same thing for PublicWork column. clean the data. 
+
+# First, lets take a look at the histogram for the PublicWork to detect the outliers 
+
+
+
+hist(Adata12$PublicWork,
+  xlab = "PublicWork",
+  main = "Histogram of PublicWork",
+  breaks = sqrt(nrow(Adata12))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ PublicWork_out <- boxplot.stats(Adata12$PublicWork)$out
+ PublicWork_out
+# 
+# 
+#  To count how many outliers in the population
+  x9 <- data.frame(PublicWork_out)
+ x9
+  nrow(x9) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata11
+# 
+   Adata13<- Adata12[-which(Adata12$PublicWork %in% PublicWork_out),] # here we removed outlier
+# 
+# 
+ Adata13
+#  
+  hist(Adata13$PublicWork,
+   xlab = "PublicWork",
+   main = "Histogram of PublicWork",
+   breaks = sqrt(nrow(Adata13))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata13$PublicWork)
+ mean(Adata13$PublicWork)
+min (Adata13$PublicWork)
+ 
+
+
+
+```
+
+
+**Cleaning the data for SelfEmployed column  ** 
+
+
+```{r}
+
+# same thing for PublicWork column. clean the data. 
+
+# First, lets take a look at the histogram for the PublicWork to detect the outliers 
+
+
+
+hist(Adata13$SelfEmployed,
+  xlab = "SelfEmployed",
+  main = "Histogram of SelfEmployed",
+  breaks = sqrt(nrow(Adata13))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ SelfEmployed_out <- boxplot.stats(Adata13$SelfEmployed)$out
+ SelfEmployed_out
+# 
+# 
+#  To count how many outliers in the population
+  x10 <- data.frame(SelfEmployed_out)
+ x10
+  nrow(x10) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata11
+# 
+   Adata14<- Adata13[-which(Adata13$SelfEmployed %in% SelfEmployed_out),] # here we removed outlier
+# 
+# 
+ Adata14
+#  
+  hist(Adata14$SelfEmployed,
+   xlab = "SelfEmployed",
+   main = "Histogram of SelfEmployed",
+   breaks = sqrt(nrow(Adata14))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata14$SelfEmployed)
+ mean(Adata14$SelfEmployed)
+min (Adata14$SelfEmployed)
+
+
+
+
+
+```
+
+
+
 
 
 
@@ -477,7 +727,7 @@ min (Adata9$Unemployment)
 ```{r}
 
 # This is the final data set:
-Adata9 
+Adata9 = Adata14
 
 str(Adata9)
 
@@ -493,6 +743,12 @@ sd(Adata9$Poverty)
 sd(Adata9$ChildPoverty)
 sd(Adata9$Employed)
 sd(Adata9$Unemployment)
+sd(Adata9$Production)
+sd(Adata9$WorkAtHome)
+sd(Adata9$PublicWork)
+sd(Adata9$SelfEmployed)
+
+
 ```
 
 
@@ -550,8 +806,25 @@ g5
 
 
 # 6 Graph for unemployment distribution
-g5 <- qqplot.data(Adata9$Unemployment)+labs(title = "Unemployment Distribution")
-g5
+g6 <- qqplot.data(Adata9$Unemployment)+labs(title = "Unemployment Distribution")
+g6
+
+
+# 7 Graph for Production distribution
+g7 <- qqplot.data(Adata9$Production)+labs(title = "Production Distribution")
+g7
+
+# 8 Graph for Production distribution
+g8 <- qqplot.data(Adata9$WorkAtHome)+labs(title = "WorkAtHome Distribution")
+g8
+
+# 9 Graph for PublicWork distribution
+g9 <- qqplot.data(Adata9$PublicWork)+labs(title = "PublicWork Distribution")
+g9
+
+# 10 Graph for SelfEmployed distribution
+g10 <- qqplot.data(Adata9$SelfEmployed)+labs(title = "SelfEmployed Distribution")
+g10
 
 ###########################################
 
@@ -573,14 +846,29 @@ qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution")
 #4 Graph for child poverty
  qqnorm(Adata9$ChildPoverty,main = "Q-Q plot. Child Poverty Distribution")
 
- #4 Graph for Employed
+ #5 Graph for Employed
  qqnorm(Adata9$Employed,main = "Q-Q plot. Employed Distribution")
  
-#5 Graph for unemployment
+#6 Graph for unemployment
  qqnorm(Adata9$Unemployment,main = "Q-Q plot. Unemlpyment Distribution")
  
 
-
+ #7 Graph for Production
+ qqnorm(Adata9$Production,main = "Q-Q plot. Production Distribution")
+ 
+ 
+ #8 Graph for WorkAtHome
+ qqnorm(Adata9$WorkAtHome,main = "Q-Q plot. WorkAtHome Distribution")
+ 
+ 
+#9 Graph for PublicWork
+ qqnorm(Adata9$PublicWork,main = "Q-Q plot. PublicWork Distribution")
+ 
+ 
+ #10 Graph for SelfEmployed
+ qqnorm(Adata9$SelfEmployed,main = "Q-Q plot. SelfEmployed Distribution")
+ 
+ 
 
 ```
 
