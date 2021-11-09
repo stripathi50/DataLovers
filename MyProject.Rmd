@@ -970,6 +970,10 @@ qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution")
 ### Chapter 4: Graphs and relationship
 **What factors affect poverty in counties?  ** 
 
+Graphical or Realistic representation is another way of dissecting numerical information. A graphical representation may be a sort of chart through which factual information are spoken to within the frame of lines or bends drawn over the facilitated focuses plotted on its surface. Similarly, we have worked on different graphs to show different possible conditions and reason to show major reasons of increasing poverty.
+
+We have started with showcasing the level of poverty in 50 states of America from which Texas has the maximum population to poverty ratio which is almost 8.69 % of total population in USA and least population to poverty ratio is in Rhode Island which is 0.01871068 % of total population.
+
 ```{r}
 
 
@@ -1209,6 +1213,10 @@ tukeyAoV
 
 
 This dataset provided many insights into the dynamics of the US census demographic data. However, we were interested particularly in poverty and what are the factors that affect it. In order to answer our question, we performed data cleansing to prepare our dataset for EDA. Then, we perform normality test for 10 variables (our desired columns) to check if the data normally distributed. This is a necessary step, so we can use the normally distributed variables in tests that required such condition. 
+
+We used graphs and relationship to come up with insights in regard to poverty and we found 
+that the major cause of poverty is consistent increase of population with unemployment. 
+As these two factors were dominant in Texas state. 
 
 Finally, by doing analysis with correlations, t-tests and ANOVA test, we state that, as a conclusion, the effecting factors for 'Poverty' are 'Income', 'Professional', 'Service', 'WorkAtHome', 'Unemployment', and 'State'.
 
