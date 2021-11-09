@@ -1,7 +1,7 @@
 ---
-title: "Project"
+title: "US Census Demographic Data"
 author: "Data lovers"
-date: "02 Nov 2021"
+date: "09 Nov 2021"
 # date: "`r Sys.Date()`"
 output:
   html_document:
@@ -30,24 +30,66 @@ options(scientific=T, digits = 3)
 
 ### Chapter 1:Introduction.
 
+Census is a very important matter, not just at the government level, but for individuals as well. The census population count decides how many congressional members each state will have for the following ten years, as well as how much federal funds localities will receive for roads, schools, housing, and social programs. 
 
+Poverty is a complicated issue. There are numerous elements to it, as well as numerous reasons. The most common definition of poverty focuses on financial hardship. This definition defines poverty rates for towns and countries based on income inequality and financially established poverty lines and quantifies poverty by the amount of money a person makes.
 
+Poverty becomes relative in this way. In the United States, the poverty line for a family of four is little over $26,000 a year. That amount of money is more than 36 times what a family of four living in absolute poverty in a low-income country is forced to subsist on each year.
 
+Many families in the world's poorest countries must make do with less than $1.90 per day to cover their basic requirements. This sort of extreme poverty affects nearly 10% of the world's population.
 
+Understanding poverty solely in terms of economic disparity and calculating relative poverty thresholds makes it impossible to see poverty as anything other than unemployment, bad living conditions, and a low income. Poverty, on the other hand, is a much broader concept.
+
+A fair definition of poverty must take into account the many various aspects of poverty, such as hunger and a lack of shelter, illiteracy and lack of access to education, being sick and unable to see a doctor, and fearing for one's future.
+
+By exploring this data and analyzing it we can come up with many insights, such as how the population varies across the states, which states that have the best transportation, how do income and poverty look like across US, employment/unemployment rates and so many questions that can be answered from these data. 
+
+Therefore, our aim in this project is to analyze the US census of 2015 to answer our interesting question: 
+
+What factors affect poverty in counties? 
 
 
 ### Chapter 2:Description of the Data.
 
+•	Dataset that is used for our project is “US Census Demographic Data” taken from the common data source Kaggle (which is an online community of data scientists and machine learning practitioners.
+
+Link: https://www.kaggle.com/muonneutrino/us-census-demographic-data?select=acs2015_county_data.csv
+
+•	Dataset contains information about (US Census 2015) American Community Survey 5-year estimates. 
+
+•	Number of variables in the dataset is 37.
+
+•	Number of observations in the dataset is 3220.
+
+•	To perform Exploratory Data Analysis, we primarily focus on the following aspects(variables) from the dataset:
+
+* TotalPop (Total population for county).
+
+*	Income. (Income in county).
+
+*	Poverty (Poverty rate in county).
+
+*	ChildPoverty. (Child poverty rate in county).
+
+* Employed (Total employed for county).
+
+*	Unemployment. (Unemployment rate for county).
+
+* Production. (Rate of this job sector in county).
+
+* WorkAtHome. (Work-at-home rate in county).
+
+* PublicWork. (Public work rate in county).
+
+* SelfEmployed. (Self-employed rate in county).
 
 
 
 
 
+**This is our dataset before performing any cleansing or dropping columns: **
 
-
-
-
-```{r step1}
+```{r step1, results='hold'}
 
 
 # importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
@@ -68,16 +110,37 @@ str(Adata1)
 Adata <- data.frame (subset(Adata1, select = -c(Hispanic,White,Black, Native, Asian, Pacific,IncomeErr, IncomePerCap, IncomePerCapErr, Drive, Carpool, Transit, Walk, OtherTransp, MeanCommute)))
 
 str(Adata)
-summary(Adata)
+#summary(Adata)
   
+
+```
+
+
+
+**And here is the summary of our dataset **
+```{r summary, results='hold'}
+
+
+summary(Adata)
+
 
 ```
 
 
 ### Chapter 3: Data Cleaning and Normality tests.
 
-***Cleaning the data. removing the outliers and the NA from the income. Saving the resulting dataframe as Adata2. **
+***Section 3.1: Data cleaning **
 
+In this section of this chapter, we will prepare our dataset for EDA. So, we will perform the following steps:
+1- Drop the unnecessary columns. 
+2- Remove the outliers. 
+3- Remove the Null values if exist.
+
+
+To detect the outliers, we first polt it using Hitogram , then remove outliers, finally polt it again to check after removing the outliers. Same technique applied for all the 10 variables. 
+
+
+***Cleaning the data for Income column **
 ```{r step2}
 
 # After reading the data we need now to clean it to prepare for the analysis. 
@@ -716,24 +779,42 @@ min (Adata14$SelfEmployed)
 
 
 
+**Final dataset **
+
+As we can see bellow, after performing the cleansing process, we removed 1,147 record which include 2 NA values and 1,145 outliers. Now we have 2073 obs across 22 variables, the data shrink, however we have now more accurate dataset that will help up us perform reliable tests as well as more accurate results.   
 
 
 
-**Final dataset and SD calcautions.**
-
-**The final data set and calculating SD for our columns to check for data spread.** 
-
-
-```{r}
+```{r final dataset, results='hold'}
 
 # This is the final data set:
 Adata9 = Adata14
 
 str(Adata9)
 
-summary(Adata9)
+#summary(Adata9)
 
 #########################
+
+
+
+
+```
+
+
+**Final Dataset Summary **
+```{r final summary, results='hold'}
+
+summary(Adata9)
+
+
+```
+
+
+**Standard deviation for the columns to check how the data spread out after cleansing process**
+
+```{r SD, results='hold'}
+
 
 # Standard deviation for the columns: 
 
@@ -748,15 +829,17 @@ sd(Adata9$WorkAtHome)
 sd(Adata9$PublicWork)
 sd(Adata9$SelfEmployed)
 
-
 ```
 
 
 
 **Normality tests  ** 
+
 **The following graphs are the normality test for our desired columns.** 
 
 **From these graphs, we noticed that the columns that use rates instead of total number are normally distributed like: income, poverty,child poverty, unemployment. While the columns that use total numbers are not normally distributed like: Total population and Employed columns.  ** 
+
+
 
 
 ```{r}
