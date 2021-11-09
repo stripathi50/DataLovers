@@ -132,9 +132,13 @@ summary(Adata)
 ***Section 3.1: Data cleaning **
 
 In this section of this chapter, we will prepare our dataset for EDA. So, we will perform the following steps:
+
 1- Drop the unnecessary columns. 
+
 2- Remove the outliers. 
+
 3- Remove the Null values if exist.
+
 
 
 To detect the outliers, we first polt it using Hitogram , then remove outliers, finally polt it again to check after removing the outliers. Same technique applied for all the 10 variables. 
@@ -781,7 +785,7 @@ min (Adata14$SelfEmployed)
 
 **Final dataset **
 
-As we can see bellow, after performing the cleansing process, we removed 1,147 record which include 2 NA values and 1,145 outliers. Now we have 2073 obs across 22 variables, the data shrink, however we have now more accurate dataset that will help up us perform reliable tests as well as more accurate results.   
+As we can see bellow, after performing the cleansing process, we removed 1,147 record which include 2 NA values and 1,145 outliers. Now we have 2073 obs across 22 variables, the data shrink, however we have now more accurate dataset that will help us perform reliable tests as well as more accurate results.   
 
 
 
@@ -835,10 +839,11 @@ sd(Adata9$SelfEmployed)
 
 **Normality tests  ** 
 
+**Section 3.2: Normality tests **
+
 **The following graphs are the normality test for our desired columns.** 
 
-**From these graphs, we noticed that the columns that use rates instead of total number are normally distributed like: income, poverty,child poverty, unemployment. While the columns that use total numbers are not normally distributed like: Total population and Employed columns.  ** 
-
+In this section of this chapter, we will test the normality distribution of all our desired columns to prepare them for other tests. We used two graphs for each variable: QQ-plot using qqpot function and QQ-plot using qqnorme function.   
 
 
 
@@ -954,6 +959,12 @@ qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution")
  
 
 ```
+
+
+**Our conclusion:**
+
+**From these graphs, we noticed that the columns that use rates instead of total number are normally distributed like: income, poverty,child poverty, unemployment, Production,WorkAtHome,PublicWork, SelfEmployed.While the columns that use total numbers are not normally distributed like: Total population and Employed columns. ** 
+**The columns that we need them for our tests are normally distributed, so we are good to go! **  
 
 
 ### Chapter 4: Graphs and relationship
