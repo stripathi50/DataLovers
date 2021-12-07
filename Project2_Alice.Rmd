@@ -959,234 +959,42 @@ qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution")
 ```
 
 
-First, we plotted histograms for both Professional and Income to see their distributions. Since the two histograms are approximately bell shaped (normally distributed), we can use them directly for modeling.
+
+```{r}
+head(Adata9)
+hist(Adata9$ChildPoverty)
+hist(Adata9$Unemployment)
+```
+```{r sub,echo=FALSE}
+library(corrplot)
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+crr<-cor(subset1)
+corrplot(crr,method = 'number',type='upper',number.font = 1, number.cex = 0.5)
+```
+
 
 ```{r}
 hist(Adata9$Professional)
-hist(Adata9$Income)
 ```
-
-We will also plot a scatter plot to see the relationship between Professional and Income. The plot appears to have a pretty obvious linear pattern where Income increases as Professional increases. So we would like to fit a linear model to predict Income with Professional.
 
 ```{r}
 plot(Adata9$Professional,Adata9$Income)
 ```
-From the statistic summary of our model, we can see that in this single predictor model, Professional turns out to be a really significant factor impacting Income. For each 1 percent increase in population with professional jobs in each state, the average state income increases by 884.4.
-
-
-Interpretations on the plots for our model:
-
-The dots in Residuals vs Fitted plot are evenly spread out above and below our fitted line and the line is approximately horizontal, meaning that the relationship is really close to linear as how to fit the model. The Q-Q plot has no obvious curving and long-tailed diagnostics, which also indicate normality.
-
-There are no data points with extreme standard deviance residuals meaning that there are no outliers. Furthermore, there are no specific data points with a large Cook's distance, so there's no high leverage points in our model.
-
 ```{r}
-lm_p<-glm(Income~Professional,data=Adata9)
+lm_p<-lm(Income~Professional,data=Adata9)
 summary(lm_p)
 plot(lm_p)
 ```
-
-As we can see from the prediction, the mean squared error is pretty large. So can we fit a better model to predict Income with all the variables? What model and factors we should use to minimize the prediction error? Let's use cross-validation to estimate the error for each model.
-
 ```{r}
-pred_p<-predict(lm_p,data.frame(Professional=Adata9$Professional))
-mse_p<-mean((pred_p-Adata9$Income)^2)
-mse_p
-```
-
-*Linear Regression*
-
-Fitting model with all predictors:
-
-```{r}
-subset1<-subset(Adata9,select = -c(CensusId,State,County))
-lm1<-glm(Income~.,data=subset1)
-summary(lm1)
-par(mfrow=c(2,2))
-plot(lm1)
-```
-
-As we can see form the summary, statistics for the variable "Women" are NAs, meaning that Women is probably a linear dependent pair with "Men". So let's drop this predictor.
-
-```{r}
-subset1<-subset(subset1,select = -Women)
-lm2<-glm(Income~.,data=subset1)
+lm2<-lm(Income~.,data=subset1)
 summary(lm2)
-par(mfrow=c(2,2))
 plot(lm2)
 ```
-
-According to the Residual vs Fitted plot, the fitted line is curved, so we are going to try some transformation on y to see if it will fix the non-linearity.
-
 ```{r}
-lm2<-glm(log(Income)~.,data=subset1)
+subset1<-subset1[-380,]
+```
+```{r}
+lm2<-lm(log(Income)~.,data=subset1)
 summary(lm2)
-par(mfrow=c(2,2))
 plot(lm2)
 ```
-
-*CV error estimating for Linear model with all predictors*
-
-```{r}
-library(FNN)
-set.seed(1) ## the seed can be arbitrary but we use 1 for the sake of consistency
-fold.index <- cut(sample(1:nrow(subset1)),breaks=10,labels=FALSE)
-mse_l<-rep(0,10)
-error_l<-rep()
-for (i in 1:10) {
-  fit_l<-glm(log(Income)~.,data=subset1[fold.index!=i,])
-  result_l<-exp(predict(fit_l,subset1[fold.index==i,]))
-  mse_l[i]<-mean((result_l-subset1[fold.index==i,5])^2)
-}
-mse_l<-mean(mse_l)
-mse_l
-```
-
-Based on the summary for our previous linear model, what if we use only the significant predictors with a p-value < 0.05 to model Income? 
-```{r}
-lm3<-lm(log(Income)~TotalPop+Men+Citizen+Poverty+ChildPoverty+WorkAtHome+Employed+Unemployment,data=subset1)
-summary(lm3)
-plot(lm3)
-```
-The statictical summary for this model is shown above. Now let's compare the CV error.
-
-```{r}
-set.seed(1) ## the seed can be arbitrary but we use 1 for the sake of consistency
-fold.index <- cut(sample(1:nrow(subset1)),breaks=10,labels=FALSE)
-mse_l<-rep(0,10)
-error_l<-rep()
-for (i in 1:10) {
-  fit_l<-glm(log(Income)~Citizen+Poverty+ChildPoverty+WorkAtHome+Employed+Unemployment,data=subset1[fold.index!=i,])
-  result_l<-exp(predict(fit_l,subset1[fold.index==i,]))
-  mse_l[i]<-mean((result_l-subset1[fold.index==i,5])^2)
-}
-mse_l<-mean(mse_l)
-mse_l
-```
-
-
-The MSE calculated from cross-validation is approximately the same but slightly smaller than the previous linear model. Thus, the linear model using our selected predictors might predict Income more precisely.
-
-
-*Subset Selection*
-
-Noticing the fact that we have a relevantly large data set with a large number of rows, as well as 17 predictors, we choose to use backward-stepwise subset selection to do model selection. 
-
-```{r}
-library(leaps)
-regfit.bwd <- regsubsets( Income~., data = subset1, nvmax = 17, method = "backward")
-reg.bwd.summary <- summary(regfit.bwd)
-plot(reg.bwd.summary$rss ,xlab="Number of Variables ", ylab="RSS", type="l")
-plot(reg.bwd.summary$adjr2 ,xlab="Number of Variables ", ylab="Adjusted RSq", type="l")
-bestadjr2<-which.max(reg.bwd.summary$adjr2)
-points(bestadjr2, reg.bwd.summary$adjr2[bestadjr2], col = "red", cex = 2, pch = 20)
-plot(reg.bwd.summary$cp, xlab = "Number of Variables ", ylab = "Cp", type = "l")
-bestcp<-which.min(reg.bwd.summary$cp)
-points(bestcp,reg.bwd.summary$cp[bestcp], col = "red", cex = 2, pch = 20)
-bestbic<-which.min(reg.bwd.summary$bic)
-plot(reg.bwd.summary$bic, xlab = "Number of Variables ", ylab = "BIC", type = "l")
-points(bestbic,reg.bwd.summary$bic[bestbic], col = "red", cex = 2, pch = 20)
-bestadjr2
-bestcp
-bestbic
-```
-We will first calculate the CV MSE with a subset of our own choice. Since we want to maximize the Adjusted R-squared value as well as minimize Cp and BIC values. We choose an id of 12. And the MSE for modeling with id=12 is 17159885.
-
-```{r}
-predict.regsubsets <- function (object, newdata , id, ...){
-  form <- as.formula(object$call[[2]]) 
-  mat <- model.matrix(form, newdata)    
-  coefi <- coef(object, id = id)       
-  xvars <- names(coefi)           
-  return(mat[,xvars] %*% coefi)    
-}
-
-set.seed(1)
-fold.index <- cut(sample(1:nrow(subset1)), breaks=10, labels=FALSE)
-
-error <- rep(0, 10)
-for (k in 1:10){
-  best.fit <- regsubsets(Income ~ ., data = subset1[fold.index!=k,], nvmax = 17)
-  pred <- predict(best.fit,subset1[fold.index==k,], id = 12)
-  error[k] <- mean((pred - subset1[fold.index==k,][,'Income'])^2)
-}
-error_ms <- mean(error)
-error_ms
-```
-
-Now we loop through different ids to see the MSE for the best subset selected by CV method.
-
-```{r}
-set.seed(1)
-fold.index <- cut(sample(1:nrow(subset1)), breaks=10, labels=FALSE)
-error_ms <- rep(0,17)
-for(i in 1:17){  
-  error <- rep(0, 10)
-  for (k in 1:10){
-    best.fit <- regsubsets(Income ~ ., data = subset1[fold.index!=k,], nvmax = 17)
-    pred <- predict(best.fit,subset1[fold.index==k,], id = i)
-    error[k] <- mean((pred - subset1[fold.index==k,][,'Income'])^2)
-  }
-  error_ms[i] <- mean(error)
-}
-bestcv<-which.min(error_ms)
-bestcv
-error_ms<-error_ms[bestcv]
-error_ms
-```
-
-
-*Principal Component Regression*
-
-Now let's use the pcr function to fit a model with 10-fold cross validation to see how this model performs.
-
-```{r}
-library("pls")
-fit.pcr <- pcr(Income~. ,data=subset1,scale=TRUE,validation="CV")
-validationplot(fit.pcr,val.type="MSEP",main="MSE for n component by 10-fold CV")
-
-```
-
-Reading from the plot, we can see that the lowest MSE appears when we use 15 component, which is approximately 2e+07.
-
-*Shrinkage Methods*
-
-*Ridge regression*: 
-
-
-```{r}
-library(glmnet)
-set.seed(1)
-fit_ridge<-glmnet(model.matrix(Income~.,data=subset1),subset1[,5], alpha = 0)
-ridge_out <- cv.glmnet(model.matrix(Income~.,data=subset1),subset1[,5], alpha = 0, nfolds = 10)
-plot(ridge_out)
-bestlam_ridge <- ridge_out$lambda.min
-bestlam_ridge
-prediction_ridge <- predict(fit_ridge, s = bestlam_ridge, newx =model.matrix(Income~.,subset1) )
-mean((prediction_ridge-subset1$Income)^2)
-```
-From the CV, we get our best lambda value of 0.558. The MSE for ridge regression model with $\lambda$=0.558 is 2.03e+09
-
-*Lasso Regression*
-
-```{r}
-fit_lasso<-glmnet(model.matrix(Income~.,data=subset1),subset1[,5], alpha = 1)
-set.seed(1)
-lasso_out <- cv.glmnet(model.matrix(Income~.,data=subset1),subset1[,5], alpha = 1,nfolds = 10)
-plot(lasso_out)
-bestlam_lasso <- lasso_out$lambda.min
-bestlam_lasso
-prediction_lasso<- predict(fit_lasso, s = bestlam_lasso, newx =model.matrix(Income~.,subset1) )
-mean((prediction_lasso-subset1$Income)^2)
-```
-
-From the CV, we get our best lambda value of 0.163, and the MSE for lasso regression model with $\lambda$=0.163 is 2.03e+09.
-
-
-*Conclusion*
-
-By comparing the test MSE for all the models we build, backward-stepwise subset selection with 15 variables performs the best, Principal Component Regression has the second smallest MSE, linear regression and Shrinkage methods have a relavantly large MSE.
-
-
-
-
