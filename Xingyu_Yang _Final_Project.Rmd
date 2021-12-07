@@ -1,0 +1,1000 @@
+---
+title: "Final Project"
+author: "Data Lovers"
+date: "r.Sys.Date()"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+```{r init, include=FALSE}
+# some of common options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+library(ezids)
+# knitr::opts_chunk$set(warning = F, results = "markup", message = F)
+knitr::opts_chunk$set(warning = F, results = "hide", message = F)
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+# ‘scipen’: integer. A penalty to be applied when deciding to print numeric values in fixed or exponential notation.  Positive values bias towards fixed and negative towards scientific notation: fixed notation will be preferred unless it is more than ‘scipen’ digits wider.
+# use scipen=999 to prevent scientific notation at all times
+```
+
+
+### Chapter 1:Introduction.
+
+Census is a very important matter, not just at the government level, but for individuals as well. The census population count decides how many congressional members each state will have for the following ten years, as well as how much federal funds localities will receive for roads, schools, housing, and social programs. 
+
+Poverty is a complicated issue. There are numerous elements to it, as well as numerous reasons. The most common definition of poverty focuses on financial hardship. This definition defines poverty rates for towns and countries based on income inequality and financially established poverty lines and quantifies poverty by the amount of money a person makes.
+
+Poverty becomes relative in this way. In the United States, the poverty line for a family of four is little over $26,000 a year. That amount of money is more than 36 times what a family of four living in absolute poverty in a low-income country is forced to subsist on each year.
+
+Many families in the world's poorest countries must make do with less than $1.90 per day to cover their basic requirements. This sort of extreme poverty affects nearly 10% of the world's population.
+
+Understanding poverty solely in terms of economic disparity and calculating relative poverty thresholds makes it impossible to see poverty as anything other than unemployment, bad living conditions, and a low income. Poverty, on the other hand, is a much broader concept.
+
+A fair definition of poverty must take into account the many various aspects of poverty, such as hunger and a lack of shelter, illiteracy and lack of access to education, being sick and unable to see a doctor, and fearing for one's future.
+
+By exploring this data and analyzing it we can come up with many insights, such as how the population varies across the states, which states that have the best transportation, how do income and poverty look like across US, employment/unemployment rates and so many questions that can be answered from these data. 
+
+Therefore, our aim in this project is to analyze the US census of 2015 to answer our interesting question: 
+
+What factors affect poverty in counties? 
+
+
+### Chapter 2:Description of the Data.
+
+•	Dataset that is used for our project is “US Census Demographic Data” taken from the common data source Kaggle (which is an online community of data scientists and machine learning practitioners.
+
+Link: https://www.kaggle.com/muonneutrino/us-census-demographic-data?select=acs2015_county_data.csv
+
+•	Dataset contains information about (US Census 2015) American Community Survey 5-year estimates. 
+
+•	Number of variables in the dataset is 37.
+
+•	Number of observations in the dataset is 3220.
+
+•	To perform Exploratory Data Analysis, we primarily focus on the following aspects(variables) from the dataset:
+
+* TotalPop (Total population for county).
+
+*	Income. (Income in county).
+
+*	Poverty (Poverty rate in county).
+
+*	ChildPoverty. (Child poverty rate in county).
+
+* Employed (Total employed for county).
+
+*	Unemployment. (Unemployment rate for county).
+
+* Production. (Rate of this job sector in county).
+
+* WorkAtHome. (Work-at-home rate in county).
+
+* PublicWork. (Public work rate in county).
+
+* SelfEmployed. (Self-employed rate in county).
+
+
+
+
+
+**This is our dataset before performing any cleansing or dropping columns: **
+
+```{r step1, results='hold'}
+
+
+# importing the dataset as Adata, and making sure the data type for the variables are set properly for categorical variables.**
+
+Adata1 <- data.frame(read.csv("acs2015_county_data.csv",header = TRUE))
+
+str(Adata1)
+
+#summary(Adata1)
+
+#  we don't need to change any variables type, all of them set properly.
+# There are a lot of variables , we may drop some of them, like :
+#Hispanic, White,	Black,	Native,	Asian	Pacific, IncomeErr,	IncomePerCap,	IncomePerCapErr
+
+
+# Dropping columns as agreed.  
+
+Adata <- data.frame (subset(Adata1, select = -c(Hispanic,White,Black, Native, Asian, Pacific,IncomeErr, IncomePerCap, IncomePerCapErr, Drive, Carpool, Transit, Walk, OtherTransp, MeanCommute)))
+
+str(Adata)
+#summary(Adata)
+  
+
+```
+
+
+
+**And here is the summary of our dataset **
+```{r summary, results='hold'}
+
+
+summary(Adata)
+
+
+```
+
+
+### Chapter 3: Data Cleaning and Normality tests.
+
+***Section 3.1: Data cleaning **
+
+In this section of this chapter, we will prepare our dataset for EDA. So, we will perform the following steps:
+
+1- Drop the unnecessary columns. 
+
+2- Remove the outliers. 
+
+3- Remove the Null values if exist.
+
+
+
+To detect the outliers, we first polt it using Hitogram , then remove outliers, finally polt it again to check after removing the outliers. Same technique applied for all the 10 variables. 
+
+
+***Cleaning the data for Income column **
+```{r step2}
+
+# After reading the data we need now to clean it to prepare for the analysis. 
+# We started with "income", first we polte it to identify the outlier and then removing it. 
+# Also , we removed the null values because it make error while do mathematics calculation. 
+# Then we follow the same steps for the remaining columns that we will gonna use in this phase. 
+# Currently our desired columns: TotalPop, Income, Poverty, ChildPoverty, Employed, Unemployment, Production, WorkAtHome,PublicWork, SelfEmployed
+
+################################################################################
+
+
+# First, lets take a look at the histogram for the income to detect the outliers 
+
+
+
+hist(Adata$Income,
+  xlab = "Income",
+  main = "Histogram of Income",
+  breaks = sqrt(nrow(Adata))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers from the incom using boxplot.stats()$out function.  
+ income_out <- boxplot.stats(Adata$Income)$out
+ income_out
+
+
+# To count how many outliers in the income
+ x <- data.frame(income_out)
+x 
+ nrow(x) # outliers numbers for income
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata2
+
+  Adata2<- Adata[-which(Adata$Income %in% income_out),] # here we removed income outlier
+
+
+ Adata2
+ 
+ hist(Adata2$Income,
+  xlab = "Income",
+  main = "Histogram of Income",
+  breaks = sqrt(nrow(Adata2))
+) # set number of bins
+
+ 
+# #Adata
+# Adata2 
+
+
+ # Now we will remove the naull values from the incmoe to allow for math calculations. 
+ 
+ my.null <- data.frame (subset(Adata2,subset= is.na(Adata2$Income)))# To indicate the null values of income. 
+my.null
+
+
+Adata3 <- data.frame (subset(Adata2, subset= CensusId!= 48301 )) # To remove the record that contains null value
+
+# Now we can calculate the max, mean , min .. etc of the income
+max(Adata3$Income)
+mean(Adata3$Income)
+min(Adata3$Income)
+
+
+
+```
+
+
+
+
+**Cleaning the data for population column. **
+
+```{r}
+
+# same thing for population column. clean the data. 
+
+# First, lets take a look at the histogram for the population to detect the outliers 
+
+
+
+hist(Adata3$TotalPop,
+  xlab = "TotalPop",
+  main = "Histogram of Population",
+  breaks = sqrt(nrow(Adata3))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers from the population using boxplot.stats()$out function.  
+ pop_out <- boxplot.stats(Adata3$TotalPop)$out
+ pop_out
+
+
+# To count how many outliers in the population
+ x2 <- data.frame(pop_out)
+x2 
+ nrow(x2) # outliers numbers 
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata4
+
+  Adata4<- Adata3[-which(Adata3$TotalPop %in% pop_out),] # here we removed  outlier
+
+
+ Adata4
+ 
+ hist(Adata4$TotalPop,
+  xlab = "TotalPop",
+  main = "Histogram of Population",
+  breaks = sqrt(nrow(Adata4))
+) # set number of bins
+
+ 
+# #Adata
+# Adata2 
+
+
+ # Now we will remove the naull values from the population to allow for math calculations. 
+ 
+ my.null2 <- data.frame (subset(Adata4,subset= is.na(Adata4$TotalPop)))# To indicate the null values of Population 
+my.null2  # No null values. 
+
+
+# Now we can calculate the max and the mean .. etc of the population. 
+max(Adata4$TotalPop)
+mean(Adata4$TotalPop)
+min(Adata4$TotalPop)
+
+
+
+```
+
+
+
+**Cleaning the data for Poverty column. **
+```{r}
+
+
+# same thing for poverty column. clean the data. 
+
+# First, lets take a look at the histogram for the poverty to detect the outliers 
+
+
+
+hist(Adata4$Poverty,
+  xlab = "Poverty",
+  main = "Histogram of Poverty",
+  breaks = sqrt(nrow(Adata4))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers from the population using boxplot.stats()$out function.  
+ Poverty_out <- boxplot.stats(Adata4$Poverty)$out
+ Poverty_out
+
+
+# To count how many outliers in the population
+ x3 <- data.frame(Poverty_out)
+x3 
+ nrow(x3) # outliers numbers 
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata5
+
+  Adata5<- Adata4[-which(Adata4$Poverty %in% Poverty_out),] # here we removed  outlier
+
+
+ Adata5
+ 
+ hist(Adata5$Poverty,
+  xlab = "Poverty",
+  main = "Histogram of Poverty",
+  breaks = sqrt(nrow(Adata5))
+) # set number of bins
+
+ 
+ 
+
+
+
+ # No null values. 
+ 
+
+# Now we can calculate the max and the mean .. etc of the population. 
+max(Adata4$Poverty)
+mean(Adata4$Poverty)
+min (Adata4$Poverty)
+
+
+
+
+
+
+```
+
+
+**Cleaning the data for Child Poverty column. **
+
+```{r}
+
+
+# same thing for Child Poverty column. clean the data. 
+
+# First, lets take a look at the histogram for the Child Poverty to detect the outliers 
+
+
+
+hist(Adata5$ChildPoverty,
+  xlab = "ChildPoverty",
+  main = "Histogram of ChildPoverty",
+  breaks = sqrt(nrow(Adata5))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers using boxplot.stats()$out function.  
+ ChildPoverty_out <- boxplot.stats(Adata5$ChildPoverty)$out
+ ChildPoverty_out
+
+
+# To count how many outliers in the population
+ x4 <- data.frame(ChildPoverty_out)
+x4
+ nrow(x4) # outliers numbers 
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata6
+
+  Adata6<- Adata5[-which(Adata5$ChildPoverty %in% ChildPoverty_out),] # here we removed  outlier
+
+
+ Adata6
+ 
+ hist(Adata6$ChildPoverty,
+  xlab = "ChildPoverty",
+  main = "Histogram of Child Poverty",
+  breaks = sqrt(nrow(Adata6))
+) # set number of bins
+
+ 
+ 
+
+ 
+ my.null3 <- data.frame (subset(Adata6,subset= is.na(Adata6$ChildPoverty)))# To indicate the null values
+my.null3  
+ 
+
+ Adata7 <- data.frame (subset(Adata6, subset= CensusId!= 15005 )) # To remove the record that contains null value
+
+
+
+# Now we can calculate the max and the mean .. etc of the population. 
+max(Adata7$ChildPoverty)
+mean(Adata7$ChildPoverty)
+min (Adata7$ChildPoverty)
+
+
+
+
+
+
+```
+
+
+**Cleaning the data for Employed column  ** 
+
+```{r}
+
+# same thing for Employed column. clean the data. 
+
+# First, lets take a look at the histogram for the Employed to detect the outliers 
+
+
+
+hist(Adata7$Employed,
+  xlab = "Employed",
+  main = "Histogram of Employed",
+  breaks = sqrt(nrow(Adata7))
+) # set number of bins
+
+
+
+
+# # Now, we can extract the outliers using boxplot.stats()$out function.  
+ Employed_out <- boxplot.stats(Adata7$Employed)$out
+ Employed_out
+
+
+# To count how many outliers in the population
+ x5 <- data.frame(Employed_out)
+x5
+ nrow(x5) # outliers numbers 
+
+
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata8
+
+  Adata8<- Adata7[-which(Adata7$Employed %in% Employed_out),] # here we removed outlier
+
+
+ Adata8
+ 
+ hist(Adata8$Employed,
+  xlab = "Employed",
+  main = "Histogram of Employed",
+  breaks = sqrt(nrow(Adata8))
+) # set number of bins
+
+ 
+ 
+# No null values. 
+ 
+
+# # Now we can calculate the max and the mean .. etc of the population. 
+max(Adata8$Employed)
+mean(Adata8$Employed)
+min (Adata8$Employed)
+
+
+
+```
+
+
+**Cleaning the data for Unemployment column  ** 
+
+
+```{r}
+
+
+# same thing for Unemployment column. clean the data. 
+
+# First, lets take a look at the histogram for the Unemployment to detect the outliers 
+
+
+
+hist(Adata8$Unemployment,
+  xlab = "Unemployment",
+  main = "Histogram of Unemployment",
+  breaks = sqrt(nrow(Adata8))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ Unemployment_out <- boxplot.stats(Adata8$Unemployment)$out
+ Unemployment_out
+# 
+# 
+#  To count how many outliers in the population
+  x6 <- data.frame(Unemployment_out)
+ x6
+  nrow(x6) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata9
+# 
+   Adata10<- Adata8[-which(Adata8$Unemploymen %in% Unemployment_out),] # here we removed outlier
+# 
+# 
+ Adata10
+#  
+  hist(Adata10$Unemployment,
+   xlab = "Unemployment",
+   main = "Histogram of Unemployment",
+   breaks = sqrt(nrow(Adata10))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata10$Unemployment)
+ mean(Adata10$Unemployment)
+min (Adata10$Unemployment)
+ 
+
+
+
+```
+
+
+**Cleaning the data for Production column  ** 
+
+
+```{r}
+
+
+# same thing for Production column. clean the data. 
+
+# First, lets take a look at the histogram for the Production to detect the outliers 
+
+
+
+hist(Adata10$Production,
+  xlab = "Production",
+  main = "Histogram of Production",
+  breaks = sqrt(nrow(Adata10))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ production_out <- boxplot.stats(Adata10$Production)$out
+ production_out
+# 
+# 
+#  To count how many outliers in the population
+  x7 <- data.frame(production_out)
+ x7
+  nrow(x7) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata11
+# 
+   Adata11<- Adata10[-which(Adata10$Production %in% production_out),] # here we removed outlier
+# 
+# 
+ Adata11
+#  
+  hist(Adata11$Production,
+   xlab = "Production",
+   main = "Histogram of Production",
+   breaks = sqrt(nrow(Adata11))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata11$Production)
+ mean(Adata11$Production)
+min (Adata11$Production)
+ 
+
+
+
+
+
+
+```
+
+**Cleaning the data for WorkAtHome column  ** 
+
+```{r}
+
+
+# same thing for WorkAtHome column. clean the data. 
+
+# First, lets take a look at the histogram for the WorkAtHome to detect the outliers 
+
+
+
+hist(Adata11$WorkAtHome,
+  xlab = "WorkAtHome",
+  main = "Histogram of WorkAtHome",
+  breaks = sqrt(nrow(Adata11))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ WorkAtHome_out <- boxplot.stats(Adata11$WorkAtHome)$out
+ WorkAtHome_out
+# 
+# 
+#  To count how many outliers in the population
+  x8 <- data.frame(WorkAtHome_out)
+ x8
+  nrow(x8) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata11
+# 
+   Adata12<- Adata11[-which(Adata11$WorkAtHome %in% WorkAtHome_out),] # here we removed outlier
+# 
+# 
+ Adata12
+#  
+  hist(Adata12$WorkAtHome,
+   xlab = "WorkAtHome",
+   main = "Histogram of WorkAtHome",
+   breaks = sqrt(nrow(Adata12))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata12$WorkAtHome)
+ mean(Adata12$WorkAtHome)
+min (Adata12$WorkAtHome)
+ 
+
+
+
+
+
+
+```
+
+**Cleaning the data for PublicWork column  ** 
+
+
+```{r}
+
+
+# same thing for PublicWork column. clean the data. 
+
+# First, lets take a look at the histogram for the PublicWork to detect the outliers 
+
+
+
+hist(Adata12$PublicWork,
+  xlab = "PublicWork",
+  main = "Histogram of PublicWork",
+  breaks = sqrt(nrow(Adata12))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ PublicWork_out <- boxplot.stats(Adata12$PublicWork)$out
+ PublicWork_out
+# 
+# 
+#  To count how many outliers in the population
+  x9 <- data.frame(PublicWork_out)
+ x9
+  nrow(x9) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata11
+# 
+   Adata13<- Adata12[-which(Adata12$PublicWork %in% PublicWork_out),] # here we removed outlier
+# 
+# 
+ Adata13
+#  
+  hist(Adata13$PublicWork,
+   xlab = "PublicWork",
+   main = "Histogram of PublicWork",
+   breaks = sqrt(nrow(Adata13))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata13$PublicWork)
+ mean(Adata13$PublicWork)
+min (Adata13$PublicWork)
+ 
+
+
+
+```
+
+
+**Cleaning the data for SelfEmployed column  ** 
+
+
+```{r}
+
+# same thing for PublicWork column. clean the data. 
+
+# First, lets take a look at the histogram for the PublicWork to detect the outliers 
+
+
+
+hist(Adata13$SelfEmployed,
+  xlab = "SelfEmployed",
+  main = "Histogram of SelfEmployed",
+  breaks = sqrt(nrow(Adata13))
+) # set number of bins
+
+
+
+
+ # Now, we can extract the outliers using boxplot.stats()$out function.  
+ SelfEmployed_out <- boxplot.stats(Adata13$SelfEmployed)$out
+ SelfEmployed_out
+# 
+# 
+#  To count how many outliers in the population
+  x10 <- data.frame(SelfEmployed_out)
+ x10
+  nrow(x10) # outliers numbers 
+# 
+# 
+ #Now, we will remove the outliers from our dataset and store the clean result in Adata11
+# 
+   Adata14<- Adata13[-which(Adata13$SelfEmployed %in% SelfEmployed_out),] # here we removed outlier
+# 
+# 
+ Adata14
+#  
+  hist(Adata14$SelfEmployed,
+   xlab = "SelfEmployed",
+   main = "Histogram of SelfEmployed",
+   breaks = sqrt(nrow(Adata14))
+) # set number of bins
+  
+
+
+# # No null values. 
+ 
+# 
+# # # Now we can calculate the max and the mean .. etc . 
+ max(Adata14$SelfEmployed)
+ mean(Adata14$SelfEmployed)
+min (Adata14$SelfEmployed)
+
+
+
+
+
+```
+
+
+
+**Final dataset **
+
+As we can see bellow, after performing the cleansing process, we removed 1,147 record which include 2 NA values and 1,145 outliers. Now we have 2073 obs across 22 variables, the data shrink, however we have now more accurate dataset that will help us perform reliable tests as well as more accurate results.   
+
+
+
+```{r final dataset, results='hold'}
+
+# This is the final data set:
+Adata9 = Adata14
+
+str(Adata9)
+
+#summary(Adata9)
+
+#########################
+
+
+
+
+```
+
+
+**Final Dataset Summary **
+```{r final summary, results='hold'}
+
+summary(Adata9)
+
+
+```
+
+
+**Standard deviation for the columns to check how the data spread out after cleansing process**
+
+```{r SD, results='hold'}
+
+
+# Standard deviation for the columns: 
+
+sd(Adata9$Income)
+sd(Adata9$TotalPop)
+sd(Adata9$Poverty)
+sd(Adata9$ChildPoverty)
+sd(Adata9$Employed)
+sd(Adata9$Unemployment)
+sd(Adata9$Production)
+sd(Adata9$WorkAtHome)
+sd(Adata9$PublicWork)
+sd(Adata9$SelfEmployed)
+
+```
+
+
+
+**Normality tests  ** 
+
+**Section 3.2: Normality tests **
+
+**The following graphs are the normality test for our desired columns.** 
+
+In this section of this chapter, we will test the normality distribution of all our desired columns to prepare them for other tests. We used two graphs for each variable: QQ-plot using qqpot function and QQ-plot using qqnorme function.   
+
+
+
+```{r}
+
+
+library(ggplot2)
+
+
+
+#This code enable us to use qqplot.data function (to draw a line)
+
+qqplot.data <- function (vec) # argument: vector of numbers
+{
+  y <- quantile(vec[!is.na(vec)], c(0.25, 0.75))
+  x <- qnorm(c(0.25, 0.75))
+  slope <- diff(y)/diff(x)
+  int <- y[1L] - slope * x[1L]
+  d <- data.frame(resids = vec)
+  ggplot(d, aes(sample = resids)) + stat_qq() + geom_abline(slope = slope, intercept = int)
+  
+}
+
+# Histogram that use ggplot: 
+
+# 1 Graph for income distribution:
+g1 <- qqplot.data(Adata9$Income)+labs(title = "Income Distribution")
+g1
+
+# 2 Graph for population distribution
+g2 <- qqplot.data(Adata9$TotalPop)+labs(title = "Population Distribution")
+g2
+
+
+# 3 Graph for Poverty distribution
+g3 <- qqplot.data(Adata9$Poverty)+labs(title = "Poverty Distribution")
+g3
+
+
+# 4 Graph for child poverty distribution
+g4 <- qqplot.data(Adata9$ChildPoverty)+labs(title = "Child Poverty Distribution")
+g4
+
+
+# 5 Graph for Employed distribution
+g5 <- qqplot.data(Adata9$Employed)+labs(title = "Employed Distribution")
+g5
+
+
+# 6 Graph for unemployment distribution
+g6 <- qqplot.data(Adata9$Unemployment)+labs(title = "Unemployment Distribution")
+g6
+
+
+# 7 Graph for Production distribution
+g7 <- qqplot.data(Adata9$Production)+labs(title = "Production Distribution")
+g7
+
+# 8 Graph for Production distribution
+g8 <- qqplot.data(Adata9$WorkAtHome)+labs(title = "WorkAtHome Distribution")
+g8
+
+# 9 Graph for PublicWork distribution
+g9 <- qqplot.data(Adata9$PublicWork)+labs(title = "PublicWork Distribution")
+g9
+
+# 10 Graph for SelfEmployed distribution
+g10 <- qqplot.data(Adata9$SelfEmployed)+labs(title = "SelfEmployed Distribution")
+g10
+
+###########################################
+
+
+
+# Additional graphs for two variables only.  QQ-plot that use qqnorm
+
+# 1 Graph for income
+qqnorm(Adata9$Income,main = "Q-Q plot. Income Distribution") 
+
+#2 Graph for population
+ qqnorm(Adata9$TotalPop,main = "Q-Q plot. Population Distribution")
+
+ 
+#3 Graph for Poverty
+ qqnorm(Adata9$Poverty,main = "Q-Q plot. Poverty Distribution")
+
+ 
+#4 Graph for child poverty
+ qqnorm(Adata9$ChildPoverty,main = "Q-Q plot. Child Poverty Distribution")
+
+ #5 Graph for Employed
+ qqnorm(Adata9$Employed,main = "Q-Q plot. Employed Distribution")
+ 
+#6 Graph for unemployment
+ qqnorm(Adata9$Unemployment,main = "Q-Q plot. Unemlpyment Distribution")
+ 
+
+ #7 Graph for Production
+ qqnorm(Adata9$Production,main = "Q-Q plot. Production Distribution")
+ 
+ 
+ #8 Graph for WorkAtHome
+ qqnorm(Adata9$WorkAtHome,main = "Q-Q plot. WorkAtHome Distribution")
+ 
+ 
+#9 Graph for PublicWork
+ qqnorm(Adata9$PublicWork,main = "Q-Q plot. PublicWork Distribution")
+ 
+ 
+ #10 Graph for SelfEmployed
+ qqnorm(Adata9$SelfEmployed,main = "Q-Q plot. SelfEmployed Distribution")
+ 
+ 
+
+```
+
+
+
+```{r}
+head(Adata9)
+hist(Adata9$ChildPoverty)
+hist(Adata9$Unemployment)
+```
+```{r sub,echo=FALSE}
+library(corrplot)
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+crr<-cor(subset1)
+corrplot(crr,method = 'number',type='upper',number.font = 1, number.cex = 0.5)
+```
+
+
+```{r}
+hist(Adata9$Professional)
+```
+
+```{r}
+plot(Adata9$Professional,Adata9$Income)
+```
+```{r}
+lm_p<-lm(Income~Professional,data=Adata9)
+summary(lm_p)
+plot(lm_p)
+```
+```{r}
+lm2<-lm(Income~.,data=subset1)
+summary(lm2)
+plot(lm2)
+```
+```{r}
+subset1<-subset1[-380,]
+```
+```{r}
+lm2<-lm(log(Income)~.,data=subset1)
+summary(lm2)
+plot(lm2)
+```
