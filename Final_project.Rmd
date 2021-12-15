@@ -1161,6 +1161,128 @@ $ H_1 $: $ \ mu_ {upper} \ neq \ mu_ {lower} $, the average child poverty of the
 
 ####################
 
+```{r income test,echo=FALSE,results='hold'}
+
+#Geereshmanajali part
+set.seed(123)
+income_upper<-Adata9[Adata9$Income>mean(Adata9$Income),]
+income_lower<-Adata9[Adata9$Income<mean(Adata9$Income),]
+iu_sample<-income_upper[sample(nrow(income_upper),50),]
+il_sample<-income_lower[sample(nrow(income_lower),50),]
+income_ttest<-t.test(iu_sample$ChildPoverty,il_sample$ChildPoverty)
+income_ttest
+
+```
+
+Since the p-value we got from the t-test is $2*10^{-16}$ which is smaller than a $\alpha$ value of 0.05, we have sufficient evidence to reject $H_0$ and conclude that there is a difference between the mean ChildPoverty for the two groups. Thus, 'ChildPoverty' is affected by 'Income'.
+
+
+```{r Poverty test,echo=FALSE,results='hold'}
+
+set.seed(123)
+UE_upper<-Adata9[Adata9$Poverty>mean(Adata9$Poverty),]
+UE_lower<-Adata9[Adata9$Poverty<mean(Adata9$Poverty),]
+pov_sample<-UE_upper[sample(nrow(UE_upper),50),]
+pov_sample<-UE_lower[sample(nrow(UE_lower),50),]
+UE_ttest<-t.test(pov_sample$ChildPoverty,pov_sample$ChildPoverty)
+UE_ttest
+
+```
+
+P-value for 'Poverty' is $2*10^{-4}$ which is less than 0.05, we reject the null and state that 'Poverty' is a affecting factor on 'ChildPoverty'.
+
+```{r professional test,echo=FALSE,results='hold'}
+
+set.seed(123)
+prof_upper<-Adata9[Adata9$Professional>mean(Adata9$Professional),]
+prof_lower<-Adata9[Adata9$Professional<mean(Adata9$Professional),]
+pu_sample<-prof_upper[sample(nrow(prof_upper),50),]
+pl_sample<-prof_lower[sample(nrow(prof_lower),50),]
+prof_ttest<-t.test(pu_sample$ChildPoverty,pl_sample$ChildPoverty)
+prof_ttest
+
+
+```
+
+P-value for 'Professional' is $2*10^{-4}$ which is less than 0.05, we reject the null and state that 'Professional' is a affecting factor on 'ChildPoverty'.
+
+
+```{r Service test,echo=FALSE,results='hold'}
+set.seed(123)
+serv_upper<-Adata9[Adata9$Service>mean(Adata9$Service),]
+serv_lower<-Adata9[Adata9$Service<mean(Adata9$Service),]
+su_sample<-serv_upper[sample(nrow(serv_upper),50),]
+sl_sample<-serv_lower[sample(nrow(serv_lower),50),]
+serv_ttest<-t.test(su_sample$ChildPoverty,sl_sample$ChildPoverty)
+serv_ttest
+```
+P-value for 'Service' is 0.004 which is smaller than 0.05, we reject the null and state that 'Service' is an affecting factor for 'ChildPoverty'.
+
+```{r production test,echo=FALSE,results='hold'}
+set.seed(123)
+prod_upper<-Adata9[Adata9$Production>mean(Adata9$Production),]
+prod_lower<-Adata9[Adata9$Production<mean(Adata9$Production),]
+produ_sample<-prod_upper[sample(nrow(prod_upper),50),]
+prodl_sample<-prod_lower[sample(nrow(prod_lower),50),]
+prod_ttest<-t.test(produ_sample$ChildPoverty,prodl_sample$ChildPoverty)
+prod_ttest
+```
+P-value for 'Production' is 0.2 which is greater than 0.05, we can not reject $H_0$, and can not conclude that 'Production' is an affecting factors for 'ChildPoverty'.
+
+```{r WorkAtHome test,echo=FALSE,results='hold'}
+set.seed(123)
+WAH_upper<-Adata9[Adata9$WorkAtHome>mean(Adata9$WorkAtHome),]
+WAH_lower<-Adata9[Adata9$WorkAtHome<mean(Adata9$WorkAtHome),]
+wu_sample<-WAH_upper[sample(nrow(WAH_upper),50),]
+wl_sample<-WAH_lower[sample(nrow(WAH_lower),50),]
+WAH_ttest<-t.test(wu_sample$ChildPoverty,wl_sample$ChildPoverty)
+WAH_ttest
+```
+P-value for "WorkAtHome' is extremely small, we have sufficient evidence to state that "WorkAtHome' is an effecting factor for 'ChildPoverty'.
+
+```{r PublicWork test,echo=FALSE,results='hold'}
+set.seed(123)
+PW_upper<-Adata9[Adata9$PublicWork>mean(Adata9$PublicWork),]
+PW_lower<-Adata9[Adata9$PublicWork<mean(Adata9$PublicWork),]
+pubu_sample<-PW_upper[sample(nrow(PW_upper),50),]
+publ_sample<-PW_lower[sample(nrow(PW_lower),50),]
+PW_ttest<-t.test(pubu_sample$ChildPoverty,publ_sample$ChildPoverty)
+PW_ttest
+```
+
+P-value for 'PublicWork' is greater than 0.05, so it is not an effecting factor for 'Poverty'.
+```{r SelfEmployed test,echo=FALSE,results='hold'}
+set.seed(123)
+SE_upper<-Adata9[Adata9$SelfEmployed>mean(Adata9$SelfEmployed),]
+SE_lower<-Adata9[Adata9$SelfEmployed<mean(Adata9$SelfEmployed),]
+semu_sample<-SE_upper[sample(nrow(SE_upper),50),]
+seml_sample<-SE_lower[sample(nrow(SE_lower),50),]
+SE_ttest<-t.test(semu_sample$ChildPoverty,seml_sample$ChildPoverty)
+SE_ttest
+```
+P-value for 'SelfEmployment' is 0.1 which is greater than 0.05, we can not reject $H_0$,  so it is not an effecting factor for 'ChildPoverty'.
+
+```{r UnEmployment test,echo=FALSE,results='hold'}
+set.seed(123)
+UE_upper<-Adata9[Adata9$Unemployment>mean(Adata9$Unemployment),]
+UE_lower<-Adata9[Adata9$Unemployment<mean(Adata9$Unemployment),]
+uemu_sample<-UE_upper[sample(nrow(UE_upper),50),]
+ueml_sample<-UE_lower[sample(nrow(UE_lower),50),]
+UE_ttest<-t.test(uemu_sample$ChildPoverty,ueml_sample$ChildPoverty)
+UE_ttest
+```
+
+P-value for 'Unemployment' is $2*10^{-7}$, so we have sufficient evidence to reject null and conclude that it is an effecting factor for 'ChildPoverty'.
+
+Noticing that 'State' is left out from our correlation matrix since it is a categorical variable, we want to perform an ANOVA test to see if there's difference in 'ChildPoverty' across different states.
+
+```{r State ANOVA test,echo=FALSE,results='hold'}
+anostate<-aov(ChildPoverty~State,data = Adata9)
+summary(anostate)
+```
+As we can see in the results of ANOVA test, our p-value is extremely small, so we have sufficient evidence to reject the null and conclude that there is difference in 'ChildPoverty' for different states. In this case, 'State' is an effecting factor for 'Poverty'. Finally, we will perform a Post-hoc test to see the pairs of states that have different 'ChildPoverty' as below. We will not display the result here since we not need this information to answer our SMART question, just save it for further analysis if needed.
+
+
 
 ### Professional and Income Test:
 

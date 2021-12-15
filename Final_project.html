@@ -1234,6 +1234,121 @@ plot(lm3)</code></pre>
 <p>$ H_0 $: $  mu_ {upper} =  mu_ {lower} $, the average child poverty of the two partial datasets is the same. $ H_1 $: $  mu_ {upper}  neq  mu_ {lower} $, the average child poverty of the two partial datasets is not the same.</p>
 <div id="section" class="section level20">
 <p class="heading"></p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  iu_sample$ChildPoverty and il_sample$ChildPoverty
+## t = -10, df = 94, p-value = 7e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -15.8 -10.5
+## sample estimates:
+## mean of x mean of y 
+##      16.8      30.0</code></pre>
+<p>Since the p-value we got from the t-test is <span class="math inline">\(2*10^{-16}\)</span> which is smaller than a <span class="math inline">\(\alpha\)</span> value of 0.05, we have sufficient evidence to reject <span class="math inline">\(H_0\)</span> and conclude that there is a difference between the mean ChildPoverty for the two groups. Thus, ‘ChildPoverty’ is affected by ‘Income’.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  pov_sample$ChildPoverty and pov_sample$ChildPoverty
+## t = 0, df = 98, p-value = 1
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -1.86  1.86
+## sample estimates:
+## mean of x mean of y 
+##      18.2      18.2</code></pre>
+<p>P-value for ‘Poverty’ is <span class="math inline">\(2*10^{-4}\)</span> which is less than 0.05, we reject the null and state that ‘Poverty’ is a affecting factor on ‘ChildPoverty’.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  pu_sample$ChildPoverty and pl_sample$ChildPoverty
+## t = -4, df = 97, p-value = 9e-05
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -9.47 -3.27
+## sample estimates:
+## mean of x mean of y 
+##      20.8      27.2</code></pre>
+<p>P-value for ‘Professional’ is <span class="math inline">\(2*10^{-4}\)</span> which is less than 0.05, we reject the null and state that ‘Professional’ is a affecting factor on ‘ChildPoverty’.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  su_sample$ChildPoverty and sl_sample$ChildPoverty
+## t = 3, df = 97, p-value = 0.005
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  1.55 8.63
+## sample estimates:
+## mean of x mean of y 
+##      27.5      22.4</code></pre>
+<p>P-value for ‘Service’ is 0.004 which is smaller than 0.05, we reject the null and state that ‘Service’ is an affecting factor for ‘ChildPoverty’.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  produ_sample$ChildPoverty and prodl_sample$ChildPoverty
+## t = 2, df = 98, p-value = 0.04
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.216 7.712
+## sample estimates:
+## mean of x mean of y 
+##      25.3      21.3</code></pre>
+<p>P-value for ‘Production’ is 0.2 which is greater than 0.05, we can not reject <span class="math inline">\(H_0\)</span>, and can not conclude that ‘Production’ is an affecting factors for ‘ChildPoverty’.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  wu_sample$ChildPoverty and wl_sample$ChildPoverty
+## t = -5, df = 97, p-value = 1e-05
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -9.96 -4.02
+## sample estimates:
+## mean of x mean of y 
+##      19.3      26.3</code></pre>
+<p>P-value for “WorkAtHome’ is extremely small, we have sufficient evidence to state that”WorkAtHome’ is an effecting factor for ‘ChildPoverty’.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  pubu_sample$ChildPoverty and publ_sample$ChildPoverty
+## t = 1, df = 93, p-value = 0.3
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -1.60  5.31
+## sample estimates:
+## mean of x mean of y 
+##      24.3      22.4</code></pre>
+<p>P-value for ‘PublicWork’ is greater than 0.05, so it is not an effecting factor for ‘Poverty’.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  semu_sample$ChildPoverty and seml_sample$ChildPoverty
+## t = -2, df = 92, p-value = 0.1
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -6.748  0.756
+## sample estimates:
+## mean of x mean of y 
+##      22.9      25.9</code></pre>
+<p>P-value for ‘SelfEmployment’ is 0.1 which is greater than 0.05, we can not reject <span class="math inline">\(H_0\)</span>, so it is not an effecting factor for ‘ChildPoverty’.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  uemu_sample$ChildPoverty and ueml_sample$ChildPoverty
+## t = 5, df = 97, p-value = 5e-06
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##   4.61 10.98
+## sample estimates:
+## mean of x mean of y 
+##      28.5      20.7</code></pre>
+<p>P-value for ‘Unemployment’ is <span class="math inline">\(2*10^{-7}\)</span>, so we have sufficient evidence to reject null and conclude that it is an effecting factor for ‘ChildPoverty’.</p>
+<p>Noticing that ‘State’ is left out from our correlation matrix since it is a categorical variable, we want to perform an ANOVA test to see if there’s difference in ‘ChildPoverty’ across different states.</p>
+<pre><code>##               Df Sum Sq Mean Sq F value Pr(&gt;F)    
+## State         48  63108    1315    25.4 &lt;2e-16 ***
+## Residuals   2024 104682      52                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>As we can see in the results of ANOVA test, our p-value is extremely small, so we have sufficient evidence to reject the null and conclude that there is difference in ‘ChildPoverty’ for different states. In this case, ‘State’ is an effecting factor for ‘Poverty’. Finally, we will perform a Post-hoc test to see the pairs of states that have different ‘ChildPoverty’ as below. We will not display the result here since we not need this information to answer our SMART question, just save it for further analysis if needed.</p>
 </div>
 </div>
 <div id="professional-and-income-test" class="section level3">
