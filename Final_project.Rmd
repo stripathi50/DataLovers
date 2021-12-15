@@ -152,6 +152,12 @@ we performed the following steps:
 Hint:To detect the outliers, we first polt it using Hitogram , then remove outliers, finally polt it again to check after removing the outliers. Same technique applied for all the 10 variables. 
 
 
+Normality Test: 
+
+We performed normality test in the previous project and here our conclusion:
+
+we noticed that the columns that use rates instead of total number are normally distributed like: income, poverty,child poverty, unemployment, Production,WorkAtHome,PublicWork, SelfEmployed.While the columns that use total numbers are not normally distributed like: Total population and Employed columns. The columns that we need them for our tests are normally distributed, so we are good to go!
+
 ```{r step2, include=FALSE}
 
 # After reading the data we need now to clean it to prepare for the analysis. 
@@ -832,7 +838,7 @@ sd(Adata9$SelfEmployed)
 
 ```
 
-### Income Prediction Test:
+### Chapter 4: Income Prediction Test.
 
 **How can we predict the average income in counties?**
 
@@ -954,7 +960,12 @@ confint(fit_3)
 
 ----------------------------------------------------------------------------------------------------------------
 
-There is statistically significant difference in the mean of the income across the three models.
+The p-value for the second model < 0.05 , which means that the second model is significantly different than the first model. 
+
+The p-value for the third model is not that significant. 
+
+As a result, the second model is the best among all. 
+
 
 ```{r anova11,results='hold'}
 
@@ -966,7 +977,7 @@ xkabledply(anovaRes_1, title = "ANOVA comparison between the models") # to show 
 
 ```
 
-### Unemployment Prediction Test:
+### Chapter 5: Unemployment Prediction Test.
 
 1.	Does a relationship exist between ‘child poverty’ and ‘unemployment’?
 
@@ -1159,6 +1170,8 @@ $ H_0 $: $ \ mu_ {upper} = \ mu_ {lower} $, the average child poverty of the two
 $ H_1 $: $ \ mu_ {upper} \ neq \ mu_ {lower} $, the average child poverty of the two partial datasets is not  the same.
 
 
+The MSE calculated from cross-validation is approximately the same but slightly smaller than the previous linear model. Thus, the linear model using our selected predictors might predict Child Poverty more precisely.
+
 ####################
 
 ```{r income test,echo=FALSE,results='hold'}
@@ -1282,9 +1295,11 @@ summary(anostate)
 ```
 As we can see in the results of ANOVA test, our p-value is extremely small, so we have sufficient evidence to reject the null and conclude that there is difference in 'ChildPoverty' for different states. In this case, 'State' is an effecting factor for 'Poverty'. Finally, we will perform a Post-hoc test to see the pairs of states that have different 'ChildPoverty' as below. We will not display the result here since we not need this information to answer our SMART question, just save it for further analysis if needed.
 
+when you understand how each independent variable’s mean is different from the others, you can begin to understand which of them has a connection to your dependent variable (such as landing page clicks) and begin to learn what is driving that behavior.
 
+You could also flip things around and see whether or not a single independent variable (such as temperature) affects multiple dependent variables (such as purchase rates of suncream, attendance at outdoor venues, and likelihood to hold a cook-out) and if so, which ones.
 
-### Professional and Income Test:
+### Chapter 6: Professional and Income Test.
 
 First, we plotted histograms for both Professional and Income to see their distributions. Since the two histograms are approximately bell shaped (normally distributed), we can use them directly for modeling.
 
@@ -1521,7 +1536,7 @@ From the CV, we get our best lambda value of 0.163, and the MSE for lasso regres
 
 *Conclusion*
 
-By comparing the test MSE for all the models we build, backward-stepwise subset selection with 15 variables performs the best, Principal Component Regression has the second smallest MSE, linear regression and Shrinkage methods have a relevantly large MSE.
+By comparing the test MSE for all the models we build, backward-stepwise subset selection with 15 variables performs the best, Principal Component Regression has the second smallest MSE, linear regression and Shrinkage methods have a relevantly large MSE.The MSE calculated from cross-validation is approximately the same but slightly smaller than the previous linear model. Thus, the linear model using our selected predictors might predict Child poverty more precisely.
 
 
 
