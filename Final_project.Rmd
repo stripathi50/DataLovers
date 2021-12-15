@@ -965,16 +965,201 @@ str(anovaRes_1)
 xkabledply(anovaRes_1, title = "ANOVA comparison between the models") # to show it in a table
 
 ```
+
 ### Unemployment Prediction Test:
+
+1.	Does a relationship exist between ‘child poverty’ and ‘unemployment’?
+
+First, let's start to get a general idea of how ChildPoverty relates to all the factors by looking at the correlation matrix between 'ChildPoverty' and the other variables.
+ 1. Correlation
+ 2.EDA--Exploratory Data Analysis (EDA) is the process of analyzing and visualizing the data to get a better          understanding of the data and glean insight from it. There are various steps involved when doing EDA but the         following are the common steps that a data analyst can take when performing EDA:
+ a.Import the data
+ b.Clean the data
+ c.Process the data
+ d.Visualize the data
+ 3.Regression-----Regression analysis is a group of statistical processes used in R programming and statistics to     determine the relationship between dataset variables. Generally, regression analysis is used to determine the        relationship between the dependent and independent variables of the dataset.
+ 4.Decision Tree plotting
 
 ```{r Sagar}
 
-#Sagar and Greesh put your code here
+library(corrplot)
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+crr<-cor(subset1)
+corrplot(crr,method = 'number',type = 'upper',number.font = 1, number.cex = 0.5)
+
+
+# EDA on child poverty
+library(ggplot2)
+library(ISLR2)
+data(package="ISLR2")
+require(tree)
+Adata10 <- Adata9
+names(Adata10)
+
+#histogram of child Poverty and unemployement
+
+hist(Adata10$ChildPoverty, main="Child poverty", xlab = "Child poverty",col = c("blue", "red", "gray", "green"))
+
+hist(Adata10$Unemployment, main="Unemployment",xlab = "Unemployment" ,col = c("blue", "red", "gray", "green"))
+
+# regression and scatter plot of child poverty and Selected features.
+  
+ggplt <- ggplot(Adata9,aes(x=ChildPoverty,y=Unemployment))+
+         geom_point()+labs(title = "ChildPoverty vs Unemployment")+labs(x="ChildPoverty", y="Unemployment" )+
+         theme_classic()
+  
+ggplt
+  
+# Plotting a single Regression Line
+ggplt+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+  
+ggplt1 <- ggplot(Adata9,aes(x=ChildPoverty,y=Income))+
+         geom_point()+labs(title = "ChildPoverty vs Income")+labs(x="ChildPoverty", y="Income" )+
+         theme_classic()
+  
+ggplt1
+  
+# Plotting a single Regression Line
+ggplt1+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt2 <- ggplot(Adata9,aes(x=ChildPoverty,y=Poverty))+
+         geom_point()+labs(title = "ChildPoverty vs Poverty")+labs(x="ChildPoverty", y="Poverty" )+
+         theme_classic()
+  
+ggplt2
+  
+# Plotting a single Regression Line
+ggplt2+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+
+ggplt3 <- ggplot(Adata9,aes(x=ChildPoverty,y=Professional))+
+         geom_point()+labs(title = "ChildPoverty vs Professional")+labs(x="ChildPoverty", y="Professional" )+
+         theme_classic()
+  
+ggplt3
+  
+# Plotting a single Regression Line
+ggplt3+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+
+ggplt3 <- ggplot(Adata9,aes(x=ChildPoverty,y=Professional))+
+         geom_point()+labs(title = "ChildPoverty vs Professional")+labs(x="ChildPoverty", y="Professional" )+
+         theme_classic()
+  
+ggplt3
+  
+# Plotting a single Regression Line
+ggplt3+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt4 <- ggplot(Adata9,aes(x=ChildPoverty,y=Service))+
+         geom_point()+labs(title = "ChildPoverty vs Service")+labs(x="ChildPoverty", y="Service" )+
+         theme_classic()
+  
+ggplt4
+  
+# Plotting a single Regression Line
+ggplt4+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt5 <- ggplot(Adata9,aes(x=ChildPoverty,y=Production))+
+         geom_point()+labs(title = "ChildPoverty vs Production")+labs(x="ChildPoverty", y="Production" )+
+         theme_classic()
+  
+ggplt5
+  
+# Plotting a single Regression Line
+ggplt5+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt6 <- ggplot(Adata9,aes(x=ChildPoverty,y=WorkAtHome))+
+         geom_point()+labs(title = "ChildPoverty vs WorkAtHome")+labs(x="ChildPoverty", y="WorkAtHome" )+
+         theme_classic()
+  
+ggplt6
+  
+# Plotting a single Regression Line
+ggplt6+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+
+ggplt7 <- ggplot(Adata9,aes(x=ChildPoverty,y=PublicWork))+
+         geom_point()+labs(title = "ChildPoverty vs PublicWork")+labs(x="ChildPoverty", y="PublicWork" )+
+         theme_classic()
+  
+ggplt7
+  
+# Plotting a single Regression Line
+ggplt7+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt8 <- ggplot(Adata9,aes(x=ChildPoverty,y=SelfEmployed))+
+         geom_point()+labs(title = "ChildPoverty vs SelfEmployed")+labs(x="ChildPoverty", y="SelfEmployed" )+
+         theme_classic()
+  
+ggplt8
+  
+# Plotting a single Regression Line
+ggplt8+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+#Keep in mind that child poverty is a quantitative variable. I would like to show this using a tree of binary responses. To do this, convert ChildPoverty to a binary variable called High. If your childpoverty is less than 20, 
+lm_p<-glm(ChildPoverty~Unemployment,data=Adata9)
+summary(lm_p)
+plot(lm_p)
+
+pred_p<-predict(lm_p,data.frame(Unemployment=Adata9$Unemployment))
+mse_p<-mean((pred_p-Adata9$ChildPoverty)^2)
+mse_p
+
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+lm1<-glm(ChildPoverty~.,data=subset1)
+summary(lm1)
+par(mfrow=c(2,2))
+plot(lm1)
+
+subset1<-subset(subset1,select = -Women)
+lm2<-glm(ChildPoverty~.,data=subset1)
+summary(lm2)
+par(mfrow=c(2,2))
+plot(lm2)
+
+library(FNN)
+set.seed(1) ## the seed can be arbitrary but we use 1 for the sake of consistency
+fold.index <- cut(sample(1:nrow(subset1)),breaks=10,labels=FALSE)
+mse_l<-rep(0,10)
+error_l<-rep()
+for (i in 1:10) {
+  fit_l<-glm(log(Income)~.,data=subset1[fold.index!=i,])
+  result_l<-exp(predict(fit_l,subset1[fold.index==i,]))
+  mse_l[i]<-mean((result_l-subset1[fold.index==i,5])^2)
+}
+mse_l<-mean(mse_l)
+mse_l
+lm3<-lm(log(Income)~TotalPop+Men+Citizen+Poverty+ChildPoverty+WorkAtHome+Employed+Unemployment,data=subset1)
+summary(lm3)
+plot(lm3)
+
 
 
 ```
 
+If you look at the correlation diagram, you can see that the variables are "income", "poverty", "Professional", "service", "production", "WorkAtHome", "public works", "selfemployed", and "unemployment". .. 'Has a correspondingly high correlation. So I would like to run some tests to see if they really are  the factors that influence child poverty. 
 
+As long as all the above variables  are checked for normal distribution in Chapter 3, you can run tests directly on them. The independent and dependent variables "child poverty" are all quantitative, so ttest is the best choice for testing hypotheses.
+
+Next, run two sample tests to see if the poverty levels in the counties with different incomes are different. To set it up, divide the data into two parts (one above average income and one below average income), get a sample of size 50, and $ \ alpha. Set the $ value. Up to 0.05 and our hypothesis is:
+
+$ H_0 $: $ \ mu_ {upper} = \ mu_ {lower} $, the average child poverty of the two partial datasets is the same.
+$ H_1 $: $ \ mu_ {upper} \ neq \ mu_ {lower} $, the average child poverty of the two partial datasets is not  the same.
+
+
+####################
 
 
 ### Professional and Income Test:
