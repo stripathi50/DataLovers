@@ -1498,7 +1498,8 @@ bestlam_ridge
 prediction_ridge <- predict(fit_ridge, s = bestlam_ridge, newx =model.matrix(Income~.,subset1) )
 mean((prediction_ridge-subset1$Income)^2)
 ```
-we set alpha equals to 0 and we can see that the MSE for the prediction increases slightly from 0 to 2, then the increment accelerates from 2 to 5, and finally slows down from 5 to 8. 
+
+We set alpha equals to 0 and we can see that the MSE for the prediction increases slightly from 0 to 2, then the increment accelerates from 2 to 5, and finally slows down from 5 to 8. 
 From the CV, we get our best lambda value of 0.558. The MSE for ridge regression model with $\lambda$=0.558 is 2.03e+09
 
 *Lasso Regression*
@@ -1514,7 +1515,7 @@ prediction_lasso<- predict(fit_lasso, s = bestlam_lasso, newx =model.matrix(Inco
 mean((prediction_lasso-subset1$Income)^2)
 ```
 
-zthe plot shows a slight increase of MSE as log lambda increases until it reaches 0.5, then the increment accelerates for larger log values.
+The plot shows a slight increase of MSE as log lambda increases until it reaches 0.5, then the increment accelerates for larger log values.
 From the CV, we get our best lambda value of 0.163, and the MSE for lasso regression model with $\lambda$=0.163 is 2.03e+09.
 
 
