@@ -53,7 +53,7 @@ Therefore, our aim in this project is to analyze the US census of 2015 to answer
 2. Does the data support ‘professional’ (individual who has a professional job) influence ‘income’?
 
 
-3. How can we predict the average income in counties? 
+3. Does a relationship exist between ‘Professional’ and ‘Income’? How can we predict the average income in counties? 
 
 
 
@@ -965,24 +965,558 @@ str(anovaRes_1)
 xkabledply(anovaRes_1, title = "ANOVA comparison between the models") # to show it in a table
 
 ```
+
 ### Unemployment Prediction Test:
+
+1.	Does a relationship exist between ‘child poverty’ and ‘unemployment’?
+
+First, let's start to get a general idea of how ChildPoverty relates to all the factors by looking at the correlation matrix between 'ChildPoverty' and the other variables.
+ 1. Correlation
+ 2.EDA--Exploratory Data Analysis (EDA) is the process of analyzing and visualizing the data to get a better          understanding of the data and glean insight from it. There are various steps involved when doing EDA but the         following are the common steps that a data analyst can take when performing EDA:
+ a.Import the data
+ b.Clean the data
+ c.Process the data
+ d.Visualize the data
+ 3.Regression-----Regression analysis is a group of statistical processes used in R programming and statistics to     determine the relationship between dataset variables. Generally, regression analysis is used to determine the        relationship between the dependent and independent variables of the dataset.
+ 4.Decision Tree plotting
 
 ```{r Sagar}
 
-#Sagar and Greesh put your code here
+library(corrplot)
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+crr<-cor(subset1)
+corrplot(crr,method = 'number',type = 'upper',number.font = 1, number.cex = 0.5)
+
+
+# EDA on child poverty
+library(ggplot2)
+library(ISLR2)
+data(package="ISLR2")
+require(tree)
+Adata10 <- Adata9
+names(Adata10)
+
+#histogram of child Poverty and unemployement
+
+hist(Adata10$ChildPoverty, main="Child poverty", xlab = "Child poverty",col = c("blue", "red", "gray", "green"))
+
+hist(Adata10$Unemployment, main="Unemployment",xlab = "Unemployment" ,col = c("blue", "red", "gray", "green"))
+
+# regression and scatter plot of child poverty and Selected features.
+  
+ggplt <- ggplot(Adata9,aes(x=ChildPoverty,y=Unemployment))+
+         geom_point()+labs(title = "ChildPoverty vs Unemployment")+labs(x="ChildPoverty", y="Unemployment" )+
+         theme_classic()
+  
+ggplt
+  
+# Plotting a single Regression Line
+ggplt+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+  
+ggplt1 <- ggplot(Adata9,aes(x=ChildPoverty,y=Income))+
+         geom_point()+labs(title = "ChildPoverty vs Income")+labs(x="ChildPoverty", y="Income" )+
+         theme_classic()
+  
+ggplt1
+  
+# Plotting a single Regression Line
+ggplt1+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt2 <- ggplot(Adata9,aes(x=ChildPoverty,y=Poverty))+
+         geom_point()+labs(title = "ChildPoverty vs Poverty")+labs(x="ChildPoverty", y="Poverty" )+
+         theme_classic()
+  
+ggplt2
+  
+# Plotting a single Regression Line
+ggplt2+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+
+ggplt3 <- ggplot(Adata9,aes(x=ChildPoverty,y=Professional))+
+         geom_point()+labs(title = "ChildPoverty vs Professional")+labs(x="ChildPoverty", y="Professional" )+
+         theme_classic()
+  
+ggplt3
+  
+# Plotting a single Regression Line
+ggplt3+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+
+ggplt3 <- ggplot(Adata9,aes(x=ChildPoverty,y=Professional))+
+         geom_point()+labs(title = "ChildPoverty vs Professional")+labs(x="ChildPoverty", y="Professional" )+
+         theme_classic()
+  
+ggplt3
+  
+# Plotting a single Regression Line
+ggplt3+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt4 <- ggplot(Adata9,aes(x=ChildPoverty,y=Service))+
+         geom_point()+labs(title = "ChildPoverty vs Service")+labs(x="ChildPoverty", y="Service" )+
+         theme_classic()
+  
+ggplt4
+  
+# Plotting a single Regression Line
+ggplt4+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt5 <- ggplot(Adata9,aes(x=ChildPoverty,y=Production))+
+         geom_point()+labs(title = "ChildPoverty vs Production")+labs(x="ChildPoverty", y="Production" )+
+         theme_classic()
+  
+ggplt5
+  
+# Plotting a single Regression Line
+ggplt5+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt6 <- ggplot(Adata9,aes(x=ChildPoverty,y=WorkAtHome))+
+         geom_point()+labs(title = "ChildPoverty vs WorkAtHome")+labs(x="ChildPoverty", y="WorkAtHome" )+
+         theme_classic()
+  
+ggplt6
+  
+# Plotting a single Regression Line
+ggplt6+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+
+ggplt7 <- ggplot(Adata9,aes(x=ChildPoverty,y=PublicWork))+
+         geom_point()+labs(title = "ChildPoverty vs PublicWork")+labs(x="ChildPoverty", y="PublicWork" )+
+         theme_classic()
+  
+ggplt7
+  
+# Plotting a single Regression Line
+ggplt7+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+ggplt8 <- ggplot(Adata9,aes(x=ChildPoverty,y=SelfEmployed))+
+         geom_point()+labs(title = "ChildPoverty vs SelfEmployed")+labs(x="ChildPoverty", y="SelfEmployed" )+
+         theme_classic()
+  
+ggplt8
+  
+# Plotting a single Regression Line
+ggplt8+geom_smooth(method=lm,se=FALSE,fullrange=TRUE)
+
+
+#Keep in mind that child poverty is a quantitative variable. I would like to show this using a tree of binary responses. To do this, convert ChildPoverty to a binary variable called High. If your childpoverty is less than 20, 
+lm_p<-glm(ChildPoverty~Unemployment,data=Adata9)
+summary(lm_p)
+plot(lm_p)
+
+pred_p<-predict(lm_p,data.frame(Unemployment=Adata9$Unemployment))
+mse_p<-mean((pred_p-Adata9$ChildPoverty)^2)
+mse_p
+
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+lm1<-glm(ChildPoverty~.,data=subset1)
+summary(lm1)
+par(mfrow=c(2,2))
+plot(lm1)
+
+subset1<-subset(subset1,select = -Women)
+lm2<-glm(ChildPoverty~.,data=subset1)
+summary(lm2)
+par(mfrow=c(2,2))
+plot(lm2)
+
+library(FNN)
+set.seed(1) ## the seed can be arbitrary but we use 1 for the sake of consistency
+fold.index <- cut(sample(1:nrow(subset1)),breaks=10,labels=FALSE)
+mse_l<-rep(0,10)
+error_l<-rep()
+for (i in 1:10) {
+  fit_l<-glm(log(Income)~.,data=subset1[fold.index!=i,])
+  result_l<-exp(predict(fit_l,subset1[fold.index==i,]))
+  mse_l[i]<-mean((result_l-subset1[fold.index==i,5])^2)
+}
+mse_l<-mean(mse_l)
+mse_l
+lm3<-lm(log(Income)~TotalPop+Men+Citizen+Poverty+ChildPoverty+WorkAtHome+Employed+Unemployment,data=subset1)
+summary(lm3)
+plot(lm3)
+
 
 
 ```
 
+If you look at the correlation diagram, you can see that the variables are "income", "poverty", "Professional", "service", "production", "WorkAtHome", "public works", "selfemployed", and "unemployment". .. 'Has a correspondingly high correlation. So I would like to run some tests to see if they really are  the factors that influence child poverty. 
+
+As long as all the above variables  are checked for normal distribution in Chapter 3, you can run tests directly on them. The independent and dependent variables "child poverty" are all quantitative, so ttest is the best choice for testing hypotheses.
+
+Next, run two sample tests to see if the poverty levels in the counties with different incomes are different. To set it up, divide the data into two parts (one above average income and one below average income), get a sample of size 50, and $ \ alpha. Set the $ value. Up to 0.05 and our hypothesis is:
+
+$ H_0 $: $ \ mu_ {upper} = \ mu_ {lower} $, the average child poverty of the two partial datasets is the same.
+$ H_1 $: $ \ mu_ {upper} \ neq \ mu_ {lower} $, the average child poverty of the two partial datasets is not  the same.
+
+
+####################
+
+```{r income test,echo=FALSE,results='hold'}
+
+#Geereshmanajali part
+set.seed(123)
+income_upper<-Adata9[Adata9$Income>mean(Adata9$Income),]
+income_lower<-Adata9[Adata9$Income<mean(Adata9$Income),]
+iu_sample<-income_upper[sample(nrow(income_upper),50),]
+il_sample<-income_lower[sample(nrow(income_lower),50),]
+income_ttest<-t.test(iu_sample$ChildPoverty,il_sample$ChildPoverty)
+income_ttest
+
+```
+
+Since the p-value we got from the t-test is $2*10^{-16}$ which is smaller than a $\alpha$ value of 0.05, we have sufficient evidence to reject $H_0$ and conclude that there is a difference between the mean ChildPoverty for the two groups. Thus, 'ChildPoverty' is affected by 'Income'.
+
+
+```{r Poverty test,echo=FALSE,results='hold'}
+
+set.seed(123)
+UE_upper<-Adata9[Adata9$Poverty>mean(Adata9$Poverty),]
+UE_lower<-Adata9[Adata9$Poverty<mean(Adata9$Poverty),]
+pov_sample<-UE_upper[sample(nrow(UE_upper),50),]
+pov_sample<-UE_lower[sample(nrow(UE_lower),50),]
+UE_ttest<-t.test(pov_sample$ChildPoverty,pov_sample$ChildPoverty)
+UE_ttest
+
+```
+
+P-value for 'Poverty' is $2*10^{-4}$ which is less than 0.05, we reject the null and state that 'Poverty' is a affecting factor on 'ChildPoverty'.
+
+```{r professional test,echo=FALSE,results='hold'}
+
+set.seed(123)
+prof_upper<-Adata9[Adata9$Professional>mean(Adata9$Professional),]
+prof_lower<-Adata9[Adata9$Professional<mean(Adata9$Professional),]
+pu_sample<-prof_upper[sample(nrow(prof_upper),50),]
+pl_sample<-prof_lower[sample(nrow(prof_lower),50),]
+prof_ttest<-t.test(pu_sample$ChildPoverty,pl_sample$ChildPoverty)
+prof_ttest
+
+
+```
+
+P-value for 'Professional' is $2*10^{-4}$ which is less than 0.05, we reject the null and state that 'Professional' is a affecting factor on 'ChildPoverty'.
+
+
+```{r Service test,echo=FALSE,results='hold'}
+set.seed(123)
+serv_upper<-Adata9[Adata9$Service>mean(Adata9$Service),]
+serv_lower<-Adata9[Adata9$Service<mean(Adata9$Service),]
+su_sample<-serv_upper[sample(nrow(serv_upper),50),]
+sl_sample<-serv_lower[sample(nrow(serv_lower),50),]
+serv_ttest<-t.test(su_sample$ChildPoverty,sl_sample$ChildPoverty)
+serv_ttest
+```
+P-value for 'Service' is 0.004 which is smaller than 0.05, we reject the null and state that 'Service' is an affecting factor for 'ChildPoverty'.
+
+```{r production test,echo=FALSE,results='hold'}
+set.seed(123)
+prod_upper<-Adata9[Adata9$Production>mean(Adata9$Production),]
+prod_lower<-Adata9[Adata9$Production<mean(Adata9$Production),]
+produ_sample<-prod_upper[sample(nrow(prod_upper),50),]
+prodl_sample<-prod_lower[sample(nrow(prod_lower),50),]
+prod_ttest<-t.test(produ_sample$ChildPoverty,prodl_sample$ChildPoverty)
+prod_ttest
+```
+P-value for 'Production' is 0.2 which is greater than 0.05, we can not reject $H_0$, and can not conclude that 'Production' is an affecting factors for 'ChildPoverty'.
+
+```{r WorkAtHome test,echo=FALSE,results='hold'}
+set.seed(123)
+WAH_upper<-Adata9[Adata9$WorkAtHome>mean(Adata9$WorkAtHome),]
+WAH_lower<-Adata9[Adata9$WorkAtHome<mean(Adata9$WorkAtHome),]
+wu_sample<-WAH_upper[sample(nrow(WAH_upper),50),]
+wl_sample<-WAH_lower[sample(nrow(WAH_lower),50),]
+WAH_ttest<-t.test(wu_sample$ChildPoverty,wl_sample$ChildPoverty)
+WAH_ttest
+```
+P-value for "WorkAtHome' is extremely small, we have sufficient evidence to state that "WorkAtHome' is an effecting factor for 'ChildPoverty'.
+
+```{r PublicWork test,echo=FALSE,results='hold'}
+set.seed(123)
+PW_upper<-Adata9[Adata9$PublicWork>mean(Adata9$PublicWork),]
+PW_lower<-Adata9[Adata9$PublicWork<mean(Adata9$PublicWork),]
+pubu_sample<-PW_upper[sample(nrow(PW_upper),50),]
+publ_sample<-PW_lower[sample(nrow(PW_lower),50),]
+PW_ttest<-t.test(pubu_sample$ChildPoverty,publ_sample$ChildPoverty)
+PW_ttest
+```
+
+P-value for 'PublicWork' is greater than 0.05, so it is not an effecting factor for 'Poverty'.
+```{r SelfEmployed test,echo=FALSE,results='hold'}
+set.seed(123)
+SE_upper<-Adata9[Adata9$SelfEmployed>mean(Adata9$SelfEmployed),]
+SE_lower<-Adata9[Adata9$SelfEmployed<mean(Adata9$SelfEmployed),]
+semu_sample<-SE_upper[sample(nrow(SE_upper),50),]
+seml_sample<-SE_lower[sample(nrow(SE_lower),50),]
+SE_ttest<-t.test(semu_sample$ChildPoverty,seml_sample$ChildPoverty)
+SE_ttest
+```
+P-value for 'SelfEmployment' is 0.1 which is greater than 0.05, we can not reject $H_0$,  so it is not an effecting factor for 'ChildPoverty'.
+
+```{r UnEmployment test,echo=FALSE,results='hold'}
+set.seed(123)
+UE_upper<-Adata9[Adata9$Unemployment>mean(Adata9$Unemployment),]
+UE_lower<-Adata9[Adata9$Unemployment<mean(Adata9$Unemployment),]
+uemu_sample<-UE_upper[sample(nrow(UE_upper),50),]
+ueml_sample<-UE_lower[sample(nrow(UE_lower),50),]
+UE_ttest<-t.test(uemu_sample$ChildPoverty,ueml_sample$ChildPoverty)
+UE_ttest
+```
+
+P-value for 'Unemployment' is $2*10^{-7}$, so we have sufficient evidence to reject null and conclude that it is an effecting factor for 'ChildPoverty'.
+
+Noticing that 'State' is left out from our correlation matrix since it is a categorical variable, we want to perform an ANOVA test to see if there's difference in 'ChildPoverty' across different states.
+
+```{r State ANOVA test,echo=FALSE,results='hold'}
+anostate<-aov(ChildPoverty~State,data = Adata9)
+summary(anostate)
+```
+As we can see in the results of ANOVA test, our p-value is extremely small, so we have sufficient evidence to reject the null and conclude that there is difference in 'ChildPoverty' for different states. In this case, 'State' is an effecting factor for 'Poverty'. Finally, we will perform a Post-hoc test to see the pairs of states that have different 'ChildPoverty' as below. We will not display the result here since we not need this information to answer our SMART question, just save it for further analysis if needed.
 
 
 
 ### Professional and Income Test:
 
-```{r Alice}
+First, we plotted histograms for both Professional and Income to see their distributions. Since the two histograms are approximately bell shaped (normally distributed), we can use them directly for modeling.
 
-# Alice put your code here. 
+```{r}
+hist(Adata9$Professional)
+hist(Adata9$Income)
+```
+
+We will also plot a scatter plot to see the relationship between Professional and Income. The plot appears to have a pretty obvious linear pattern where Income increases as Professional increases. So we would like to fit a linear model to predict Income with Professional.
+
+```{r}
+plot(Adata9$Professional,Adata9$Income)
+```
+From the statistic summary of our model, we can see that in this single predictor model, Professional turns out to be a really significant factor impacting Income. For each 1 percent increase in population with professional jobs in each state, the average state income increases by 884.4.
+
+
+Interpretations on the plots for our model:
+
+The dots in Residuals vs Fitted plot are evenly spread out above and below our fitted line and the line is approximately horizontal, meaning that the relationship is really close to linear as how to fit the model. The Q-Q plot has no obvious curving and long-tailed diagnostics, which also indicate normality.
+
+There are no data points with extreme standard deviance residuals meaning that there are no outliers. Furthermore, there are no specific data points with a large Cook's distance, so there's no high leverage points in our model.
+
+```{r}
+lm_p<-glm(Income~Professional,data=Adata9)
+summary(lm_p)
+plot(lm_p)
+```
+
+As we can see from the prediction, the mean squared error is pretty large. So can we fit a better model to predict Income with all the variables? What model and factors we should use to minimize the prediction error? Let's use cross-validation to estimate the error for each model.
+
+```{r}
+pred_p<-predict(lm_p,data.frame(Professional=Adata9$Professional))
+mse_p<-mean((pred_p-Adata9$Income)^2)
+mse_p
+```
+
+*Linear Regression*
+
+Fitting model with all predictors:
+
+```{r}
+subset1<-subset(Adata9,select = -c(CensusId,State,County))
+lm1<-glm(Income~.,data=subset1)
+summary(lm1)
+par(mfrow=c(2,2))
+plot(lm1)
+```
+
+As we can see form the summary, statistics for the variable "Women" are NAs, meaning that Women is probably a linear dependent pair with "Men". So let's drop this predictor.
+
+```{r}
+subset1<-subset(subset1,select = -Women)
+lm2<-glm(Income~.,data=subset1)
+summary(lm2)
+par(mfrow=c(2,2))
+plot(lm2)
+```
+
+According to the Residual vs Fitted plot, the fitted line is curved, so we are going to try some transformation on y to see if it will fix the non-linearity.
+
+```{r}
+lm2<-glm(log(Income)~.,data=subset1)
+summary(lm2)
+par(mfrow=c(2,2))
+plot(lm2)
+```
+
+*CV error estimating for Linear model with all predictors*
+
+```{r}
+library(FNN)
+set.seed(1) ## the seed can be arbitrary but we use 1 for the sake of consistency
+fold.index <- cut(sample(1:nrow(subset1)),breaks=10,labels=FALSE)
+mse_l<-rep(0,10)
+error_l<-rep()
+for (i in 1:10) {
+  fit_l<-glm(log(Income)~.,data=subset1[fold.index!=i,])
+  result_l<-exp(predict(fit_l,subset1[fold.index==i,]))
+  mse_l[i]<-mean((result_l-subset1[fold.index==i,5])^2)
+}
+mse_l<-mean(mse_l)
+mse_l
+```
+
+Based on the summary for our previous linear model, what if we use only the significant predictors with a p-value < 0.05 to model Income? 
+
+```{r}
+lm3<-lm(log(Income)~TotalPop+Men+Citizen+Poverty+ChildPoverty+WorkAtHome+Employed+Unemployment,data=subset1)
+summary(lm3)
+plot(lm3)
+```
+The statictical summary for this model is shown above. Now let's compare the CV error.
+
+```{r}
+set.seed(1) ## the seed can be arbitrary but we use 1 for the sake of consistency
+fold.index <- cut(sample(1:nrow(subset1)),breaks=10,labels=FALSE)
+mse_l<-rep(0,10)
+error_l<-rep()
+for (i in 1:10) {
+  fit_l<-glm(log(Income)~Citizen+Poverty+ChildPoverty+WorkAtHome+Employed+Unemployment,data=subset1[fold.index!=i,])
+  result_l<-exp(predict(fit_l,subset1[fold.index==i,]))
+  mse_l[i]<-mean((result_l-subset1[fold.index==i,5])^2)
+}
+mse_l<-mean(mse_l)
+mse_l
+```
+
+
+The MSE calculated from cross-validation is approximately the same but slightly smaller than the previous linear model. Thus, the linear model using our selected predictors might predict Income more precisely.
+
+
+*Subset Selection*
+
+Noticing the fact that we have a relevantly large data set with a large number of rows, as well as 17 predictors, we choose to use backward-stepwise subset selection to do model selection. 
+
+```{r}
+library(leaps)
+regfit.bwd <- regsubsets( Income~., data = subset1, nvmax = 17, method = "backward")
+reg.bwd.summary <- summary(regfit.bwd)
+plot(reg.bwd.summary$rss ,xlab="Number of Variables ", ylab="RSS", type="l")
+plot(reg.bwd.summary$adjr2 ,xlab="Number of Variables ", ylab="Adjusted RSq", type="l")
+bestadjr2<-which.max(reg.bwd.summary$adjr2)
+points(bestadjr2, reg.bwd.summary$adjr2[bestadjr2], col = "red", cex = 2, pch = 20)
+plot(reg.bwd.summary$cp, xlab = "Number of Variables ", ylab = "Cp", type = "l")
+bestcp<-which.min(reg.bwd.summary$cp)
+points(bestcp,reg.bwd.summary$cp[bestcp], col = "red", cex = 2, pch = 20)
+bestbic<-which.min(reg.bwd.summary$bic)
+plot(reg.bwd.summary$bic, xlab = "Number of Variables ", ylab = "BIC", type = "l")
+points(bestbic,reg.bwd.summary$bic[bestbic], col = "red", cex = 2, pch = 20)
+bestadjr2
+bestcp
+bestbic
+```
+
+We will first calculate the CV MSE with a subset of our own choice. Since we want to maximize the Adjusted R-squared value as well as minimize Cp and BIC values. We choose an id of 12. And the MSE for modeling with id=12 is 17159885.
+
+```{r}
+predict.regsubsets <- function (object, newdata , id, ...){
+  form <- as.formula(object$call[[2]]) 
+  mat <- model.matrix(form, newdata)    
+  coefi <- coef(object, id = id)       
+  xvars <- names(coefi)           
+  return(mat[,xvars] %*% coefi)    
+}
+
+set.seed(1)
+fold.index <- cut(sample(1:nrow(subset1)), breaks=10, labels=FALSE)
+
+error <- rep(0, 10)
+for (k in 1:10){
+  best.fit <- regsubsets(Income ~ ., data = subset1[fold.index!=k,], nvmax = 17)
+  pred <- predict(best.fit,subset1[fold.index==k,], id = 12)
+  error[k] <- mean((pred - subset1[fold.index==k,][,'Income'])^2)
+}
+error_ms <- mean(error)
+error_ms
+```
+
+Now we loop through different ids to see the MSE for the best subset selected by CV method.
+
+```{r}
+set.seed(1)
+fold.index <- cut(sample(1:nrow(subset1)), breaks=10, labels=FALSE)
+error_ms <- rep(0,17)
+for(i in 1:17){  
+  error <- rep(0, 10)
+  for (k in 1:10){
+    best.fit <- regsubsets(Income ~ ., data = subset1[fold.index!=k,], nvmax = 17)
+    pred <- predict(best.fit,subset1[fold.index==k,], id = i)
+    error[k] <- mean((pred - subset1[fold.index==k,][,'Income'])^2)
+  }
+  error_ms[i] <- mean(error)
+}
+bestcv<-which.min(error_ms)
+bestcv
+error_ms<-error_ms[bestcv]
+error_ms
+```
+
+
+*Principal Component Regression*
+
+Now let's use the pcr function to fit a model with 10-fold cross validation to see how this model performs.
+
+```{r}
+library("pls")
+fit.pcr <- pcr(Income~. ,data=subset1,scale=TRUE,validation="CV")
+validationplot(fit.pcr,val.type="MSEP",main="MSE for n component by 10-fold CV")
 
 ```
+
+Reading from the plot, we can see that the lowest MSE appears when we use 15 component, which is approximately 2e+07.
+
+*Shrinkage Methods*
+
+*Ridge regression*: 
+
+
+```{r}
+library(glmnet)
+set.seed(1)
+fit_ridge<-glmnet(model.matrix(Income~.,data=subset1),subset1[,5], alpha = 0)
+ridge_out <- cv.glmnet(model.matrix(Income~.,data=subset1),subset1[,5], alpha = 0, nfolds = 10)
+plot(ridge_out)
+bestlam_ridge <- ridge_out$lambda.min
+bestlam_ridge
+prediction_ridge <- predict(fit_ridge, s = bestlam_ridge, newx =model.matrix(Income~.,subset1) )
+mean((prediction_ridge-subset1$Income)^2)
+```
+From the CV, we get our best lambda value of 0.558. The MSE for ridge regression model with $\lambda$=0.558 is 2.03e+09
+
+*Lasso Regression*
+
+```{r}
+fit_lasso<-glmnet(model.matrix(Income~.,data=subset1),subset1[,5], alpha = 1)
+set.seed(1)
+lasso_out <- cv.glmnet(model.matrix(Income~.,data=subset1),subset1[,5], alpha = 1,nfolds = 10)
+plot(lasso_out)
+bestlam_lasso <- lasso_out$lambda.min
+bestlam_lasso
+prediction_lasso<- predict(fit_lasso, s = bestlam_lasso, newx =model.matrix(Income~.,subset1) )
+mean((prediction_lasso-subset1$Income)^2)
+```
+
+From the CV, we get our best lambda value of 0.163, and the MSE for lasso regression model with $\lambda$=0.163 is 2.03e+09.
+
+
+*Conclusion*
+
+By comparing the test MSE for all the models we build, backward-stepwise subset selection with 15 variables performs the best, Principal Component Regression has the second smallest MSE, linear regression and Shrinkage methods have a relavantly large MSE.
+
+
+
 
 
